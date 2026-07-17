@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import FadeIn from "@/components/common/FadeIn";
-import HomeSectionHeader from "@/components/home/HomeSectionHeader";
+import SectionTitle from "@/components/common/SectionTitle";
 import { industriesContent } from "@/data/home";
 
 export default function Industries() {
@@ -9,7 +9,8 @@ export default function Industries() {
     <section className="relative overflow-hidden bg-[#F8F9FB] px-6 py-24 lg:py-28">
       <div className="relative z-10 mx-auto max-w-7xl">
         <FadeIn>
-          <HomeSectionHeader
+          <SectionTitle
+            light={false}
             title={industriesContent.heading}
             description={industriesContent.description}
           />
