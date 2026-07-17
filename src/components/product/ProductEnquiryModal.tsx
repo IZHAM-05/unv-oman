@@ -41,28 +41,28 @@ export default function ProductEnquiryModal({
 
   useEffect(() => {
     if (isOpen) {
-      setShouldRender(true);
-
       const animationFrame =
         window.requestAnimationFrame(() => {
+          setShouldRender(true);
           setIsVisible(true);
         });
 
       return () => {
-        window.cancelAnimationFrame(
-          animationFrame,
-        );
+        window.cancelAnimationFrame(animationFrame);
       };
     }
 
-    setIsVisible(false);
+    const hideTimeout = window.setTimeout(() => {
+      setIsVisible(false);
+    }, 0);
 
-    const closeTimer = window.setTimeout(() => {
+    const unmountTimeout = window.setTimeout(() => {
       setShouldRender(false);
     }, animationDuration);
 
     return () => {
-      window.clearTimeout(closeTimer);
+      window.clearTimeout(hideTimeout);
+      window.clearTimeout(unmountTimeout);
     };
   }, [isOpen]);
 

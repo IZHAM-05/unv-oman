@@ -97,11 +97,7 @@ function StatIcon({ icon }: StatIconProps) {
 }
 
 function AnimatedCounter({ value, trigger }: AnimatedCounterProps) {
-  // If there are no numbers, just display the text.
-  if (!/\d/.test(value)) {
-    return <span>{value}</span>;
-  }
-
+  const hasNumber = /\d/.test(value);
   const [count, setCount] = useState(0);
 
   const numericTarget = Number.parseInt(value.replace(/\D/g, ""), 10);
@@ -109,7 +105,7 @@ function AnimatedCounter({ value, trigger }: AnimatedCounterProps) {
   const hasComma = value.includes(",");
 
   useEffect(() => {
-    if (!trigger || Number.isNaN(numericTarget)) return;
+    if (!trigger || !hasNumber || Number.isNaN(numericTarget)) return;
 
     let start: number | null = null;
     let animationFrame = 0;
@@ -138,7 +134,11 @@ function AnimatedCounter({ value, trigger }: AnimatedCounterProps) {
     animationFrame = window.requestAnimationFrame(step);
 
     return () => window.cancelAnimationFrame(animationFrame);
-  }, [trigger, numericTarget]);
+  }, [trigger, numericTarget, hasNumber]);
+
+  if (!hasNumber) {
+    return <span>{value}</span>;
+  }
 
   if (value === "24/7") {
     return (

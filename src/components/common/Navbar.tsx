@@ -92,13 +92,19 @@ export default function Navbar() {
   }, [pathname]);
 
   useEffect(() => {
-    setIsOpen(false);
-    setIsProductsMenuOpen(false);
-    setIsSolutionsMenuOpen(false);
-    setIsMobileProductsOpen(false);
-    setIsMobileSolutionsOpen(false);
-    setMobileExpandedCategorySlug("");
-    setMobileExpandedSubcategorySlug("");
+    const timeoutId = window.setTimeout(() => {
+      setIsOpen(false);
+      setIsProductsMenuOpen(false);
+      setIsSolutionsMenuOpen(false);
+      setIsMobileProductsOpen(false);
+      setIsMobileSolutionsOpen(false);
+      setMobileExpandedCategorySlug("");
+      setMobileExpandedSubcategorySlug("");
+    }, 0);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
   }, [pathname]);
 
   useEffect(() => {
