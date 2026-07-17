@@ -1,26 +1,236 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
 @import "tailwindcss";
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #111111;
+  --brand-blue: #2563eb;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: "Inter", sans-serif;
+  --font-mono: "Inter", sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(15, 23, 42, 0.2) transparent;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Inter", sans-serif;
 }
+
+::-webkit-scrollbar {
+  width: 0.5px;
+  height: 0.5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(15, 23, 42, 0.2);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(15, 23, 42, 0.3);
+}
+
+.navbar-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.navbar-scrollbar::-webkit-scrollbar {
+  display: none;
+  width: 0.25px;
+  height: 0.25px;
+}
+
+.navbar-scrollbar:hover,
+.navbar-scrollbar:focus-within,
+.navbar-scrollbar:active {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(102, 184, 239, 0.35) transparent;
+}
+
+.navbar-scrollbar:hover::-webkit-scrollbar,
+.navbar-scrollbar:focus-within::-webkit-scrollbar,
+.navbar-scrollbar:active::-webkit-scrollbar {
+  display: block;
+}
+
+.navbar-scrollbar:hover::-webkit-scrollbar-track,
+.navbar-scrollbar:focus-within::-webkit-scrollbar-track,
+.navbar-scrollbar:active::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.navbar-scrollbar:hover::-webkit-scrollbar-thumb,
+.navbar-scrollbar:focus-within::-webkit-scrollbar-thumb,
+.navbar-scrollbar:active::-webkit-scrollbar-thumb {
+  background: rgba(102, 184, 239, 0.35);
+  border-radius: 9999px;
+}
+
+.navbar-scrollbar:hover::-webkit-scrollbar-thumb:hover,
+.navbar-scrollbar:focus-within::-webkit-scrollbar-thumb:hover,
+.navbar-scrollbar:active::-webkit-scrollbar-thumb:hover {
+  background: rgba(102, 184, 239, 0.5);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-18px);
+  }
+}
+
+.container-custom {
+  width: 100%;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+
+.section-padding {
+  padding-block: 5rem;
+}
+
+.glass-card {
+  border: 1px solid rgba(17, 17, 17, 0.08);
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.06);
+}
+
+.gradient-text {
+  color: var(--brand-blue);
+}
+
+.premium-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: #111111;
+  padding: 1rem 1.75rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #ffffff;
+  transition: all 0.25s ease;
+}
+
+.premium-button:hover {
+  background: #1f2937;
+}
+
+.secondary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  padding: 1rem 1.75rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #111111;
+  transition: all 0.25s ease;
+}
+
+.secondary-button:hover {
+  background: #f3f4f6;
+}
+
+@media (max-width: 640px) {
+  .section-padding {
+    padding-block: 4rem;
+  }
+}
+
+@keyframes scanline {
+  0% {
+    transform: translateY(-100%);
+  }
+
+  100% {
+    transform: translateY(420%);
+  }
+}
+
+.scanline {
+  animation: scanline 4s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scanline {
+    animation: none !important;
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+@keyframes coreValueFade {
+  from {
+    opacity: 0;
+    transform: scale(1.025);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes coreValueContent {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
