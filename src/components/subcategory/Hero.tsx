@@ -25,7 +25,7 @@ export default function SubcategoryHero({
       <div
         className="absolute inset-0 scale-105 bg-cover bg-center"
         style={{
-          backgroundImage: `url('${subcategory.image}')`,
+          backgroundImage: `url('/images/subcategories/subcategory-hero.jpeg')`,
         }}
       />
 

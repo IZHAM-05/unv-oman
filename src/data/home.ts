@@ -15,31 +15,31 @@ export const homeHeroContent: HomeHeroContent = {
 
   slides: [
     {
-      image: "https://picsum.photos/id/1015/800/800",
+      image: "/images/home/home-hero1.jpeg",
       title: "Professional Video Surveillance for Oman.",
       description:
         "Explore a comprehensive range of UNV video surveillance products designed for clear monitoring, reliable recording and professional security applications.",
     },
     {
-      image: "https://picsum.photos/id/1018/800/800",
+      image: "/images/home/home-hero2.jpeg",
       title: "Clear Vision. Smarter Security.",
       description:
         "Combine high-quality video imaging with intelligent detection capabilities to improve situational awareness and support faster security decisions.",
     },
     {
-      image: "https://picsum.photos/id/1025/800/800",
+      image: "/images/home/home-hero3.jpeg",
       title: "Reliable Recording and Management.",
       description:
         "Build dependable surveillance systems with network video recorders, storage options and management tools designed for continuous video operation.",
     },
     {
-      image: "https://picsum.photos/id/1035/800/800",
+      image: "/images/home/home-hero4.jpeg",
       title: "Advanced Protection for Critical Environments.",
       description:
         "Support demanding security requirements with PTZ, thermal and specialised surveillance technologies for wider coverage and enhanced visibility.",
     },
     {
-      image: "https://picsum.photos/id/1040/800/800",
+      image: "/images/home/home-hero5.jpeg",
       title: "Intelligent Security Management.",
       description:
         "Connect cameras, recorders and video management platforms within a unified security ecosystem that can adapt to projects of different sizes.",
@@ -168,25 +168,25 @@ export const whyChooseUsReasons: HomeImageContentCard[] = [
     title: "Complete Product Portfolio",
     description:
       "Explore network cameras, PTZ cameras, video recorders, thermal products, storage systems and video management technologies within one connected portfolio.",
-    image: "https://picsum.photos/id/1015/900/700",
+    image: "/images/home/why-choose-us-1.jpeg",
   },
   {
     title: "Solutions for Different Project Sizes",
     description:
       "Choose products for individual sites, multi-building installations and larger surveillance environments based on coverage, recording and management requirements.",
-    image: "https://picsum.photos/id/1018/900/700",
+    image: "/images/home/why-choose-us-2.jpeg",
   },
   {
     title: "Intelligent Video Technology",
     description:
       "Use advanced imaging, intelligent detection and efficient video management capabilities to strengthen visibility and operational awareness.",
-    image: "https://picsum.photos/id/1035/900/700",
+    image: "/images/home/why-choose-us-3.jpeg",
   },
   {
     title: "Project Enquiry Support",
     description:
       "Share your security requirements to receive guidance on suitable product categories, camera types, recording options and system configurations.",
-    image: "https://picsum.photos/id/1040/900/700",
+    image: "/images/home/why-choose-us-4.jpeg",
   },
 ];
 

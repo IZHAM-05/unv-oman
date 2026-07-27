@@ -34,6 +34,10 @@ type ProductEnquiryFormData = {
   agreeToTerms: boolean;
 };
 
+type ProductEnquiryFormErrors = Partial<
+  Record<keyof ProductEnquiryFormData, string>
+>;
+
 const initialFormData: ProductEnquiryFormData = {
   fullName: "",
   email: "",
@@ -44,6 +48,21 @@ const initialFormData: ProductEnquiryFormData = {
 const inputClassName =
   "mt-1.5 w-full border border-zinc-200 bg-white px-3.5 py-2.5 text-[13px] text-zinc-950 outline-none transition-all duration-300 placeholder:text-zinc-400 hover:border-zinc-300 focus:border-[#005BAC] focus:ring-4 focus:ring-blue-600/[0.07]";
 
+const errorInputClassName =
+  "border-red-500 focus:border-red-500 focus:ring-red-500/[0.12]";
+
+const validateName = (name: string) => {
+  return /^[A-Za-z ]{3,}$/.test(name.trim());
+};
+
+const validateEmail = (email: string) => {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+};
+
+const validatePhone = (phone: string) => {
+  return /^\d{10,15}$/.test(phone);
+};
+
 export default function ProductEnquiryForm({
   category,
   subcategory,
@@ -51,12 +70,10 @@ export default function ProductEnquiryForm({
   onClose,
 }: ProductEnquiryFormProps) {
   const [formData, setFormData] =
-    useState<ProductEnquiryFormData>(
-      initialFormData,
-    );
+    useState<ProductEnquiryFormData>(initialFormData);
 
-  const [isSubmitted, setIsSubmitted] =
-    useState(false);
+  const [errors, setErrors] = useState<ProductEnquiryFormErrors>({});
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleChange = (
     event: ChangeEvent<HTMLInputElement>,
@@ -70,12 +87,38 @@ export default function ProductEnquiryForm({
         [name]: target.checked,
       }));
 
+      setErrors((current) => ({
+        ...current,
+        [name]: "",
+      }));
+
+      return;
+    }
+
+    if (name === "phone") {
+      const value = target.value.replace(/\D/g, "").slice(0, 15);
+
+      setFormData((current) => ({
+        ...current,
+        phone: value,
+      }));
+
+      setErrors((current) => ({
+        ...current,
+        phone: "",
+      }));
+
       return;
     }
 
     setFormData((current) => ({
       ...current,
       [name]: target.value,
+    }));
+
+    setErrors((current) => ({
+      ...current,
+      [name]: "",
     }));
   };
 
@@ -84,10 +127,33 @@ export default function ProductEnquiryForm({
   ) => {
     event.preventDefault();
 
-    /*
-      The real submission workflow will be connected
-      after the company confirms the email/API process.
-    */
+    const nextErrors: ProductEnquiryFormErrors = {};
+
+    if (!validateName(formData.fullName)) {
+      nextErrors.fullName =
+        "Please enter a valid full name.";
+    }
+
+    if (!validateEmail(formData.email)) {
+      nextErrors.email =
+        "Please enter a valid email address.";
+    }
+
+    if (!validatePhone(formData.phone)) {
+      nextErrors.phone =
+        "Phone number must contain only digits and be between 10 and 15 digits.";
+    }
+
+    if (!formData.agreeToTerms) {
+      nextErrors.agreeToTerms =
+        "You must agree before submitting.";
+    }
+
+    setErrors(nextErrors);
+
+    if (Object.keys(nextErrors).length > 0) {
+      return;
+    }
 
     setIsSubmitted(true);
   };
@@ -113,9 +179,7 @@ export default function ProductEnquiryForm({
             <span className="font-semibold text-zinc-950">
               {product.name}
             </span>{" "}
-            has been prepared. The actual submission
-            workflow will be connected after the company
-            email and enquiry process are confirmed.
+            has been prepared. The actual submission workflow will be connected after the company email and enquiry process are confirmed.
           </p>
 
           <button
@@ -163,9 +227,7 @@ export default function ProductEnquiryForm({
               </h2>
 
               <p className="mt-3 max-w-sm text-[12px] font-light leading-5 text-zinc-600">
-                Submit your contact details for product
-                information, availability and quotation
-                guidance.
+                Submit your contact details for product information, availability and quotation guidance.
               </p>
             </div>
 
@@ -232,14 +294,8 @@ export default function ProductEnquiryForm({
                 htmlFor="productEnquiryFullName"
                 className="block text-[9px] font-bold uppercase tracking-[0.15em] text-zinc-600"
               >
-                {
-                  contactFormContent.fields.fullName
-                    .label
-                }
-
-                <span className="ml-1 text-red-500">
-                  *
-                </span>
+                {contactFormContent.fields.fullName.label}
+                <span className="ml-1 text-red-500">*</span>
               </label>
 
               <input
@@ -248,13 +304,20 @@ export default function ProductEnquiryForm({
                 type="text"
                 value={formData.fullName}
                 onChange={handleChange}
-                placeholder={
-                  contactFormContent.fields.fullName
-                    .placeholder
-                }
-                className={inputClassName}
+                placeholder={contactFormContent.fields.fullName.placeholder}
+                className={`${inputClassName} ${
+                  errors.fullName ? errorInputClassName : ""
+                }`}
                 required
+                minLength={3}
+                autoComplete="name"
               />
+
+              {errors.fullName && (
+                <p className="mt-2 text-[11px] text-red-600">
+                  {errors.fullName}
+                </p>
+              )}
             </div>
 
             <div>
@@ -262,13 +325,8 @@ export default function ProductEnquiryForm({
                 htmlFor="productEnquiryEmail"
                 className="block text-[9px] font-bold uppercase tracking-[0.15em] text-zinc-600"
               >
-                {
-                  contactFormContent.fields.email.label
-                }
-
-                <span className="ml-1 text-red-500">
-                  *
-                </span>
+                {contactFormContent.fields.email.label}
+                <span className="ml-1 text-red-500">*</span>
               </label>
 
               <input
@@ -277,13 +335,19 @@ export default function ProductEnquiryForm({
                 type="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder={
-                  contactFormContent.fields.email
-                    .placeholder
-                }
-                className={inputClassName}
+                placeholder={contactFormContent.fields.email.placeholder}
+                className={`${inputClassName} ${
+                  errors.email ? errorInputClassName : ""
+                }`}
                 required
+                autoComplete="email"
               />
+
+              {errors.email && (
+                <p className="mt-2 text-[11px] text-red-600">
+                  {errors.email}
+                </p>
+              )}
             </div>
 
             <div>
@@ -291,13 +355,8 @@ export default function ProductEnquiryForm({
                 htmlFor="productEnquiryPhone"
                 className="block text-[9px] font-bold uppercase tracking-[0.15em] text-zinc-600"
               >
-                {
-                  contactFormContent.fields.phone.label
-                }
-
-                <span className="ml-1 text-red-500">
-                  *
-                </span>
+                {contactFormContent.fields.phone.label}
+                <span className="ml-1 text-red-500">*</span>
               </label>
 
               <input
@@ -306,13 +365,22 @@ export default function ProductEnquiryForm({
                 type="tel"
                 value={formData.phone}
                 onChange={handleChange}
-                placeholder={
-                  contactFormContent.fields.phone
-                    .placeholder
-                }
-                className={inputClassName}
+                placeholder={contactFormContent.fields.phone.placeholder}
+                className={`${inputClassName} ${
+                  errors.phone ? errorInputClassName : ""
+                }`}
                 required
+                inputMode="numeric"
+                pattern="\d{10,15}"
+                maxLength={15}
+                autoComplete="tel"
               />
+
+              {errors.phone && (
+                <p className="mt-2 text-[11px] text-red-600">
+                  {errors.phone}
+                </p>
+              )}
             </div>
 
             <div>
@@ -355,28 +423,26 @@ export default function ProductEnquiryForm({
               className="text-[11px] leading-5 text-zinc-600"
             >
               {contactFormContent.agreement.prefix}{" "}
-
               <a
-                href={
-                  contactFormContent.agreement.action
-                    .href
-                }
+                href={contactFormContent.agreement.action.href}
                 className="font-semibold text-[#005BAC] underline-offset-4 hover:underline"
               >
-                {
-                  contactFormContent.agreement.action
-                    .label
-                }
+                {contactFormContent.agreement.action.label}
               </a>
             </label>
           </div>
+
+          {errors.agreeToTerms && (
+            <p className="mt-2 text-[11px] text-red-600">
+              {errors.agreeToTerms}
+            </p>
+          )}
 
           <button
             type="submit"
             className="group mt-4 inline-flex w-full items-center justify-center gap-2.5 bg-[#005BAC] px-6 py-2.5 text-[13px] font-semibold text-white transition-all duration-300 hover:bg-[#004A8D] hover:shadow-[0_16px_35px_-18px_rgba(0,91,172,0.65)]"
           >
             Request Product Quote
-
             <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
           </button>
 

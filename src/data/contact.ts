@@ -9,7 +9,7 @@ export const contactHeroContent: ContactHeroContent = {
   title: "Contact Us.",
   description:
     "Get in touch for product enquiries, quotations and guidance on suitable UNV surveillance technologies for your security project in Oman.",
-  image: "https://picsum.photos/id/1018/1920/1080",
+  image: "/images/contact/contact-us.jpeg",
   imageAlt: "Contact UNV Oman",
 };
 

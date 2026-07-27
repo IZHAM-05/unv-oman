@@ -5,15 +5,24 @@ import { featuredProductsContent } from "@/data/home";
 import { productCategories } from "@/data/products";
 
 export default function FeaturedProducts() {
-  const products = productCategories.flatMap((category) =>
-    category.subcategories.flatMap((subcategory) =>
-      subcategory.products.map((product) => ({
-        product,
+  const featuredProducts = productCategories.flatMap((category) => {
+    const firstSubcategory = category.subcategories[0];
+
+    if (
+      !firstSubcategory ||
+      firstSubcategory.products.length === 0
+    ) {
+      return [];
+    }
+
+    return [
+      {
         category,
-        subcategory,
-      })),
-    ),
-  );
+        subcategory: firstSubcategory,
+        product: firstSubcategory.products[0],
+      },
+    ];
+  });
 
   return (
     <section className="relative overflow-hidden border-t border-zinc-100 bg-[#F8F9FB]">
@@ -42,7 +51,7 @@ export default function FeaturedProducts() {
         </FadeIn>
 
         <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5 lg:gap-5">
-          {products
+          {featuredProducts
             .slice(0, 5)
             .map(({ product, category, subcategory }, index) => (
               <FadeIn key={product.id} delay={index * 0.06}>
@@ -50,10 +59,12 @@ export default function FeaturedProducts() {
                   href={`/products/${category.slug}/${subcategory.slug}/${product.slug}`}
                   className="group relative flex aspect-[3/4] cursor-pointer flex-col justify-end overflow-hidden rounded-xl border border-zinc-200/50 bg-zinc-950 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-zinc-300 hover:shadow-xl hover:shadow-zinc-900/10"
                 >
+                  <div className="absolute inset-0 bg-zinc-950" />
+
                   <img
                     src={product.image}
                     alt={product.name}
-                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-[900ms] ease-[cubic-bezier(0.33,1,0.68,1)] group-hover:scale-110"
+                    className="absolute inset-0 h-full w-full object-contain p-4 transition-transform duration-[900ms] ease-[cubic-bezier(0.33,1,0.68,1)] group-hover:scale-105"
                   />
 
                   <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/45 to-transparent transition-opacity duration-500 group-hover:opacity-95" />

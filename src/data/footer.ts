@@ -62,8 +62,8 @@ export const footerContent: FooterContent = {
       href: "/products/analog-cameras",
     },
     {
-      name: "VMS Software",
-      href: "/products/vms-software",
+      name: "VMS",
+      href: "/products/vms",
     },
   ],
 

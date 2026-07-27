@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import type { MouseEvent } from "react";
 
 import { footerContent } from "@/data/footer";
 import type { FooterSocialIcon } from "@/types/footer";
@@ -46,15 +48,20 @@ function SocialIcon({ icon }: SocialIconProps) {
           <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
         </svg>
       );
+
+    default:
+      return null;
   }
 }
 
 export default function Footer() {
-  const handleQuickLinkClick = (
-    event: React.MouseEvent<HTMLAnchorElement>,
+  const pathname = usePathname();
+
+  const handleHomeClick = (
+    event: MouseEvent<HTMLAnchorElement>,
     href: string,
   ) => {
-    if (href === "/" && window.location.pathname === "/") {
+    if (href === "/" && pathname === "/") {
       event.preventDefault();
 
       document.getElementById("hero")?.scrollIntoView({
@@ -66,10 +73,8 @@ export default function Footer() {
 
   return (
     <footer className="relative overflow-hidden border-t border-zinc-100 bg-[#F8F9FB] text-zinc-600">
-      {/* Gradient top line matching other sections */}
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-zinc-200 to-transparent" />
 
-      {/* Dot pattern matching Stats & Categories */}
       <div
         className="pointer-events-none absolute inset-0 opacity-[0.04]"
         style={{
@@ -81,10 +86,12 @@ export default function Footer() {
 
       <div className="relative mx-auto max-w-7xl px-6 py-20 lg:px-8 lg:py-24">
         <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
-          {/* Column 1: Logo + Description + Social */}
           <div>
             <Link
               href={footerContent.brand.logoHref}
+              onClick={(event) =>
+                handleHomeClick(event, footerContent.brand.logoHref)
+              }
               className="mb-5 inline-block"
             >
               <img
@@ -114,7 +121,6 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Column 2: Quick Links */}
           <div>
             <h3 className="mb-5 flex items-center gap-3 text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-900">
               <span className="h-px w-6 bg-blue-600" />
@@ -123,17 +129,12 @@ export default function Footer() {
 
             <ul className="space-y-3">
               {footerContent.quickLinks.map((item) => (
-                <li
-                  key={item.href}
-                  className="group flex items-center gap-2.5"
-                >
+                <li key={item.href} className="group flex items-center gap-2.5">
                   <span className="h-1.5 w-1.5 rounded-full bg-blue-600/50 transition group-hover:scale-125 group-hover:bg-blue-600" />
 
                   <Link
                     href={item.href}
-                    onClick={(event) =>
-                      handleQuickLinkClick(event, item.href)
-                    }
+                    onClick={(event) => handleHomeClick(event, item.href)}
                     className="text-sm text-zinc-500 transition-colors duration-200 hover:text-blue-600"
                   >
                     {item.name}
@@ -143,7 +144,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Column 3: Products */}
           <div>
             <h3 className="mb-5 flex items-center gap-3 text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-900">
               <span className="h-px w-6 bg-blue-600" />
@@ -152,10 +152,7 @@ export default function Footer() {
 
             <ul className="space-y-3">
               {footerContent.productLinks.map((item) => (
-                <li
-                  key={item.href}
-                  className="group flex items-center gap-2.5"
-                >
+                <li key={item.href} className="group flex items-center gap-2.5">
                   <span className="h-1.5 w-1.5 rounded-full bg-blue-600/50 transition group-hover:scale-125 group-hover:bg-blue-600" />
 
                   <Link
@@ -169,7 +166,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Column 4: Contact */}
           <div>
             <h3 className="mb-5 flex items-center gap-3 text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-900">
               <span className="h-px w-6 bg-blue-600" />
@@ -246,7 +242,6 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Column 5: Location */}
           <div>
             <h3 className="mb-5 flex items-center gap-3 text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-900">
               <span className="h-px w-6 bg-blue-600" />
@@ -288,11 +283,9 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Bottom Bar */}
         <div className="mt-16 flex flex-col gap-3 border-t border-zinc-200/80 pt-8 text-xs text-zinc-400 md:flex-row md:items-center md:justify-between">
           <p>
-            © {new Date().getFullYear()}{" "}
-            {footerContent.bottom.companyName}.{" "}
+            © {new Date().getFullYear()} {footerContent.bottom.companyName}.{" "}
             {footerContent.bottom.rightsText}
           </p>
 

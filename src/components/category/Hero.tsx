@@ -20,7 +20,7 @@ export default function CategoryHero({
       <div
         className="absolute inset-0 scale-105 bg-cover bg-center"
         style={{
-          backgroundImage: `url('${category.image}')`,
+          backgroundImage: "url('/images/categories/categoryhero/category-hero.jpeg')",
         }}
       />
 
