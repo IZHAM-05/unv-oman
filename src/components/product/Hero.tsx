@@ -37,7 +37,7 @@ export default function ProductHero({
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: `url('/images/product/product-home.jpeg')`,
+            backgroundImage: `url('/images/product/product-hero.jpeg')`,
           }}
         />
 

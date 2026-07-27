@@ -56,7 +56,7 @@ export default function FeaturedSolutions() {
                     <img
                       src={solution.cardImage}
                       alt={solution.name}
-                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 hover:scale-[1.03]"
+                      className="absolute inset-0 h-full w-full object-cover brightness-[0.7] transition-transform duration-700 hover:scale-[1.03]"
                     />
 
                     <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-transparent" />

@@ -15,7 +15,7 @@ export const productsHeroContent: ProductsHeroContent = {
   title: "Product Systems.",
   description:
     "Browse CCTV, IP camera, NVR, PTZ, thermal, analog and VMS product categories for professional surveillance projects.",
-  image: "/images/products/product-home.jpeg",
+  image: "/images/products/product-hero.jpeg",
 };
 
 export const productCategoryContent: ProductCategoryContent = {

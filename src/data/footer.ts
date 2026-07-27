@@ -3,7 +3,7 @@ import type { FooterContent } from "@/types/footer";
 export const footerContent: FooterContent = {
   brand: {
     logo:
-      "https://www.unvdubai.com/_astro/UNVLOGO.B2902jCZ_Z2pRAWs.webp",
+      "/images/logos/unv.png",
     logoAlt: "UNV Oman logo",
     logoHref: "/",
     description:

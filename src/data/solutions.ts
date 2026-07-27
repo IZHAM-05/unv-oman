@@ -11,7 +11,7 @@ export const solutionsPageContent: SolutionsPageContent = {
     description:
       "Explore UNV technologies for professional surveillance, intelligent analytics, access management, vehicle control and centralised monitoring.",
     backgroundImage:
-      "/images/solutions/solution-home.jpeg",
+      "/images/solutions/solution-hero.jpeg",
 
     systemLabel: "Solution Model",
     systemValue: "Integrated Security",
