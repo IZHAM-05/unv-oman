@@ -4,7 +4,14 @@ import FeaturedCategories from "@/components/home/FeaturedCategories";
 import FeaturedProducts from "@/components/home/FeaturedProducts";
 import WhyChooseUs from "@/components/home/WhyChooseUs";
 import HomeCTA from "@/components/home/HomeCTA";
-// import Industries from "@/components/home/Industries";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "UNV Oman | CCTV & Video Surveillance Solutions",
+  description:
+    "Professional UNV and Uniview CCTV, IP cameras, NVRs, PTZ cameras, thermal cameras and VMS solutions for commercial, industrial and institutional surveillance projects across Oman.",
+};
+
 
 export default function HomePage() {
   return (
@@ -14,7 +21,6 @@ export default function HomePage() {
        <div className="absolute inset-0 bg-white blur-sm opacity-60" />
        </div>
       <Stats />
-      {/* <Industries /> */}
       <FeaturedCategories />
       <FeaturedProducts />
       <WhyChooseUs />

@@ -11,7 +11,7 @@ export const aboutHero: AboutHeroContent = {
   title: "About UNV Oman.",
   description:
     "Explore professional Uniview video surveillance products, intelligent technologies and integrated security solutions for projects across Oman.",
-  image: "https://picsum.photos/id/1035/1920/1080",
+  image: "/images/about/about-home.jpeg",
   imageAlt: "UNV Oman professional video surveillance solutions",
 };
 
@@ -23,7 +23,7 @@ export const aboutIntroductionContent: AboutIntroductionContent = {
     "UNV Oman provides a clear platform for exploring Uniview video surveillance products and technologies for commercial, institutional and industrial security requirements.",
     "The portfolio brings together network cameras, PTZ systems, video recorders, thermal products, storage technologies and video management platforms to support complete surveillance system planning.",
   ],
-  image: "https://picsum.photos/id/1018/1400/1100",
+  image: "/images/about/about-security.jpeg",
   imageAlt: "Professional UNV video surveillance technology",
   imageLabel: "Intelligent Surveillance Technology",
   action: {
@@ -37,7 +37,7 @@ export const aboutVisionMissionContent: AboutVisionMissionContent = {
   heading: "Advancing security through professional and reliable technology.",
   description:
     "Our direction reflects Uniview’s commitment to intelligent innovation, dependable products and security technologies that help create safer environments.",
-  image: "https://picsum.photos/id/1040/1600/1200",
+  image: "/images/about/about-vision.jpeg",
   imageAlt: "Integrated UNV surveillance system",
   imageLabel: "Reliable Security Technology",
   items: [
@@ -141,7 +141,7 @@ export const aboutCTAContent: AboutCTAContent = {
   heading: "Planning a video surveillance project in Oman?",
   description:
     "Share your project requirements and explore suitable UNV cameras, recording systems and management technologies for your security environment.",
-  image: "https://picsum.photos/id/1015/1920/1000",
+  image: "/images/about/about-cta.jpeg",
   imageAlt: "UNV video surveillance project planning",
   primaryAction: {
     label: "Discuss Your Project",

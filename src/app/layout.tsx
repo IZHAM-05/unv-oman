@@ -4,9 +4,9 @@ import Navbar from "@/components/common/Navbar";
 import Footer from "@/components/common/Footer";
 
 export const metadata: Metadata = {
-  title: "UNV Dubai | CCTV & Surveillance Solutions",
+  title: "UNV Oman",
   description:
-    "Professional UNV and Uniview CCTV, IP camera, NVR, PTZ camera, thermal camera and VMS solutions in Dubai, UAE.",
+    "Professional UNV and Uniview video surveillance solutions across Oman.",
 };
 
 export default function RootLayout({

@@ -30,8 +30,9 @@ export default function SubcategoryHero({
       />
 
       {/* Overlays */}
-      <div className="absolute inset-0 bg-gradient-to-r from-zinc-950 via-zinc-950/85 to-zinc-950/35" />
-      <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/10 to-zinc-950/55" />
+      <div className="absolute inset-0 bg-gradient-to-r from-zinc-950/70 via-zinc-950/40 to-zinc-950/10" />
+
+   <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/60 via-transparent to-zinc-950/20" />
       <div className="absolute inset-0 bg-zinc-950/10 lg:hidden" />
 
       {/* Content */}

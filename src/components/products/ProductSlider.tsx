@@ -1,29 +1,15 @@
 "use client";
 
-import {
-  useEffect,
-  useRef,
-} from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import {
-  ArrowRight,
-  ChevronRight,
-  Headphones,
-} from "lucide-react";
+import { ArrowRight, ChevronRight, Headphones } from "lucide-react";
 
 import FadeIn from "@/components/common/FadeIn";
-
-import {
-  productCategories,
-  productSliderContent,
-} from "@/data/products";
+import { productCategories, productSliderContent } from "@/data/products";
 
 type ProductSliderProps = {
   selectedCategorySlug: string;
-  onSelectCategory: (
-    slug: string,
-    shouldScroll?: boolean,
-  ) => void;
+  onSelectCategory: (slug: string, shouldScroll?: boolean) => void;
 };
 
 type NavigationItemProps = {
@@ -57,9 +43,7 @@ function NavigationItem({
     >
       <span
         className={`mr-4 font-mono text-[10px] font-bold tracking-[0.12em] ${
-          isSelected
-            ? "text-blue-100"
-            : "text-zinc-400"
+          isSelected ? "text-blue-100" : "text-zinc-400"
         }`}
       >
         {code}
@@ -71,15 +55,11 @@ function NavigationItem({
 
       <ChevronRight
         className={`ml-4 h-4 w-4 shrink-0 transition-transform duration-300 group-hover:translate-x-1 ${
-          isSelected
-            ? "text-white"
-            : "text-zinc-300 group-hover:text-[#005BAC]"
+          isSelected ? "text-white" : "text-zinc-300 group-hover:text-[#005BAC]"
         }`}
       />
 
-      {isSelected && (
-        <span className="absolute bottom-0 left-0 top-0 w-1 bg-[#78C5F5]" />
-      )}
+      {isSelected && <span className="absolute bottom-0 left-0 top-0 w-1 bg-[#78C5F5]" />}
     </button>
   );
 }
@@ -88,10 +68,9 @@ export default function ProductSlider({
   selectedCategorySlug,
   onSelectCategory,
 }: ProductSliderProps) {
-  const hoverTimeoutRef =
-    useRef<ReturnType<typeof setTimeout> | null>(
-      null,
-    );
+  const hoverTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const navRef = useRef<HTMLDivElement>(null);
+  const [hoveredSlug, setHoveredSlug] = useState<string | null>(null);
 
   const clearHoverTimeout = () => {
     if (hoverTimeoutRef.current) {
@@ -101,55 +80,47 @@ export default function ProductSlider({
   };
 
   useEffect(() => {
-    return () => {
-      clearHoverTimeout();
-    };
+    return () => clearHoverTimeout();
   }, []);
 
   const handleMouseEnter = (slug: string) => {
-    const supportsHover = window.matchMedia(
-      "(hover: hover) and (pointer: fine)",
-    ).matches;
+    const supportsHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    if (!supportsHover) return;
 
-    if (!supportsHover) {
-      return;
-    }
-
+    setHoveredSlug(slug);
     clearHoverTimeout();
 
     hoverTimeoutRef.current = setTimeout(() => {
-      onSelectCategory(slug, false);
+      // Only select if the hovered slug is still the same (prevents stale selection)
+      if (hoveredSlug === slug) {
+        onSelectCategory(slug, false);
+      }
       hoverTimeoutRef.current = null;
-    }, 90);
+    }, 200); // increased from 90ms to 200ms
   };
 
   const handleMouseLeave = () => {
+    setHoveredSlug(null);
     clearHoverTimeout();
   };
 
   const handleCategoryClick = (slug: string) => {
     clearHoverTimeout();
+    setHoveredSlug(null);
     onSelectCategory(slug, true);
   };
 
   const navigationItems = [
     {
       slug: "all",
-      label:
-        productSliderContent.allCategoriesLabel,
-      code:
-        productSliderContent.allCategoriesCode,
+      label: productSliderContent.allCategoriesLabel,
+      code: productSliderContent.allCategoriesCode,
     },
-    ...productCategories.map(
-      (category, index) => ({
-        slug: category.slug,
-        label: category.name,
-        code: String(index + 1).padStart(
-          2,
-          "0",
-        ),
-      }),
-    ),
+    ...productCategories.map((category, index) => ({
+      slug: category.slug,
+      label: category.name,
+      code: String(index + 1).padStart(2, "0"),
+    })),
   ];
 
   return (
@@ -159,45 +130,32 @@ export default function ProductSlider({
           <div className="overflow-hidden border border-zinc-200 bg-white shadow-[0_18px_45px_-35px_rgba(15,23,42,0.35)]">
             <div className="relative overflow-hidden bg-zinc-950 px-6 py-7 text-white">
               <div className="absolute bottom-0 left-0 h-1 w-20 bg-[#005BAC]" />
-
               <p className="text-[10px] font-bold uppercase tracking-[0.26em] text-[#75BCEB]">
                 {productSliderContent.eyebrow}
               </p>
-
               <h3 className="mt-3 text-xl font-bold leading-tight tracking-[-0.02em]">
                 {productSliderContent.title}
               </h3>
-
               <p className="mt-3 text-xs leading-6 text-zinc-400">
-                {
-                  productSliderContent.description
-                }
+                {productSliderContent.description}
               </p>
             </div>
 
             <nav
-              aria-label={
-                productSliderContent.title
-              }
+              ref={navRef}
+              aria-label={productSliderContent.title}
+              className="h-[520px] overflow-y-auto overscroll-contain scroll-smooth pr-1"
+              style={{ scrollbarWidth: "thin" }}
             >
               {navigationItems.map((item) => (
                 <NavigationItem
                   key={item.slug}
-                  isSelected={
-                    selectedCategorySlug ===
-                    item.slug
-                  }
+                  isSelected={selectedCategorySlug === item.slug}
                   code={item.code}
                   label={item.label}
-                  onClick={() =>
-                    handleCategoryClick(item.slug)
-                  }
-                  onMouseEnter={() =>
-                    handleMouseEnter(item.slug)
-                  }
-                  onMouseLeave={
-                    handleMouseLeave
-                  }
+                  onClick={() => handleCategoryClick(item.slug)}
+                  onMouseEnter={() => handleMouseEnter(item.slug)}
+                  onMouseLeave={handleMouseLeave}
                 />
               ))}
             </nav>
@@ -209,40 +167,20 @@ export default function ProductSlider({
             <div className="flex h-11 w-11 items-center justify-center bg-[#005BAC] text-white">
               <Headphones className="h-5 w-5" />
             </div>
-
             <p className="mt-6 text-[10px] font-bold uppercase tracking-[0.24em] text-[#005BAC]">
-              {
-                productSliderContent.assistance
-                  .eyebrow
-              }
+              {productSliderContent.assistance.eyebrow}
             </p>
-
             <h4 className="mt-3 text-xl font-bold leading-tight tracking-[-0.02em] text-zinc-950">
-              {
-                productSliderContent.assistance
-                  .title
-              }
+              {productSliderContent.assistance.title}
             </h4>
-
             <p className="mt-3 text-sm leading-7 text-zinc-600">
-              {
-                productSliderContent.assistance
-                  .description
-              }
+              {productSliderContent.assistance.description}
             </p>
-
             <Link
-              href={
-                productSliderContent.assistance
-                  .action.href
-              }
+              href={productSliderContent.assistance.action.href}
               className="mt-6 inline-flex min-h-11 w-full items-center justify-center gap-2 bg-[#005BAC] px-5 text-sm font-semibold text-white transition-colors duration-300 hover:bg-[#004A8D]"
             >
-              {
-                productSliderContent.assistance
-                  .action.label
-              }
-
+              {productSliderContent.assistance.action.label}
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
@@ -251,4 +189,3 @@ export default function ProductSlider({
     </aside>
   );
 }
-

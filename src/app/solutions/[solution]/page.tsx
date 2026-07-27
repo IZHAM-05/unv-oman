@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-
+import type { Metadata } from "next";
 import SolutionArchitecture from "@/components/solutions/detail/SolutionArchitecture";
 import SolutionBenefits from "@/components/solutions/detail/SolutionBenefits";
 import SolutionChallenges from "@/components/solutions/detail/SolutionChallenges";
@@ -17,6 +17,27 @@ type SolutionPageProps = {
     solution: string;
   }>;
 };
+
+export async function generateMetadata({
+  params,
+}: SolutionPageProps): Promise<Metadata> {
+  const { solution: solutionSlug } = await params;
+
+  const solution = getSolutionBySlug(solutionSlug);
+
+  if (!solution) {
+    return {
+      title: "Solution Not Found | UNV Oman",
+      description: "The requested security solution could not be found.",
+    };
+  }
+
+  return {
+    title: `${solution.name} | Solutions | UNV Oman`,
+    description: solution.summary,
+  };
+}
+
 
 export function generateStaticParams() {
   return solutions.map((solution) => ({

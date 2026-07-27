@@ -11,7 +11,7 @@ export const solutionsPageContent: SolutionsPageContent = {
     description:
       "Explore UNV technologies for professional surveillance, intelligent analytics, access management, vehicle control and centralised monitoring.",
     backgroundImage:
-      "https://picsum.photos/id/1018/1920/1080",
+      "/images/solutions/solution-home.jpeg",
 
     systemLabel: "Solution Model",
     systemValue: "Integrated Security",
@@ -165,10 +165,10 @@ export const solutions: Solution[] = [
     featured: true,
 
     cardImage:
-      "https://picsum.photos/id/1011/1400/1000",
+      "/images/solutions/solutions-education.jpeg",
 
     heroImage:
-      "https://picsum.photos/id/1011/1920/1080",
+      "/images/solutions/solutions-education.jpeg",
 
     summary:
       "Integrated protection for campuses, entrances, classrooms, public areas and vehicle access points.",
@@ -328,10 +328,10 @@ export const solutions: Solution[] = [
     featured: false,
 
     cardImage:
-      "https://picsum.photos/id/1058/1400/1000",
+      "/images/solutions/solutions-stadium.jpeg",
 
     heroImage:
-      "https://picsum.photos/id/1058/1920/1080",
+      "/images/solutions/solutions-stadium.jpeg",
 
     summary:
       "Wide-area surveillance, crowd visibility, perimeter detection and controlled venue access.",
@@ -491,10 +491,10 @@ export const solutions: Solution[] = [
     featured: true,
 
     cardImage:
-      "https://picsum.photos/id/1031/1400/1000",
+      "/images/solutions/solutions-mall.jpeg",
 
     heroImage:
-      "https://picsum.photos/id/1031/1920/1080",
+      "/images/solutions/solutions-mall.jpeg",
 
     summary:
       "Security and operational intelligence across retail floors, entrances, service areas and parking facilities.",
@@ -654,10 +654,10 @@ export const solutions: Solution[] = [
     featured: true,
 
     cardImage:
-      "https://picsum.photos/id/1029/1400/1000",
+     "/images/solutions/solutions-healthcare.jpeg",
 
     heroImage:
-      "https://picsum.photos/id/1029/1920/1080",
+      "/images/solutions/solutions-healthcare.jpeg",
 
     summary:
       "Continuous monitoring and controlled access for sensitive healthcare environments.",
@@ -817,10 +817,10 @@ export const solutions: Solution[] = [
     featured: false,
 
     cardImage:
-      "https://picsum.photos/id/1016/1400/1000",
+      "/images/solutions/solutions-buiding.jpeg",
 
     heroImage:
-      "https://picsum.photos/id/1016/1920/1080",
+      "/images/solutions/solutions-building.jpeg",
 
     summary:
       "Unified surveillance and access management for commercial, residential and mixed-use properties.",
@@ -980,10 +980,10 @@ export const solutions: Solution[] = [
     featured: false,
 
     cardImage:
-      "https://picsum.photos/id/1059/1400/1000",
+      "/images/solutions/solutions-retail.jpeg",
 
     heroImage:
-      "https://picsum.photos/id/1059/1920/1080",
+      "/images/solutions/solutions-retail.jpeg",
 
     summary:
       "Store protection, transaction verification and customer-flow intelligence.",
@@ -1143,10 +1143,10 @@ export const solutions: Solution[] = [
     featured: false,
 
     cardImage:
-      "https://picsum.photos/id/1078/1400/1000",
+      "/images/solutions/solutions-banking.jpeg",
 
     heroImage:
-      "https://picsum.photos/id/1078/1920/1080",
+      "/images/solutions/solutions-banking.jpeg",
 
     summary:
       "Reliable surveillance, secure video storage and centralised branch management.",
@@ -1306,10 +1306,10 @@ export const solutions: Solution[] = [
     featured: false,
 
     cardImage:
-      "https://picsum.photos/id/1043/1400/1000",
+      "/images/solutions/solutions-hospitality.jpeg",
 
     heroImage:
-      "https://picsum.photos/id/1043/1920/1080",
+      "/images/solutions/solutions-hospitality.jpeg",
 
     summary:
       "Discreet protection for guest environments, service areas and property access points.",
@@ -1469,10 +1469,10 @@ export const solutions: Solution[] = [
     featured: true,
 
     cardImage:
-      "https://picsum.photos/id/1081/1400/1000",
+      "/images/solutions/solutions-warehouse.jpeg",
 
     heroImage:
-      "https://picsum.photos/id/1081/1920/1080",
+      "/images/solutions/solutions-warehouse.jpeg",
 
     summary:
       "End-to-end protection for personnel, vehicles, cargo and facility boundaries.",
@@ -1483,7 +1483,7 @@ export const solutions: Solution[] = [
     keyCapabilities: [
       "Perimeter protection",
       "Personnel and vehicle access",
-      "Cargo and fire-risk monitoring",
+      "Cargo and fire-risk monitoring", 
     ],
 
     hero: {

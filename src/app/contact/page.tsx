@@ -1,6 +1,15 @@
 import ContactForm from "@/components/contact/ContactForm";
 import ContactHero from "@/components/contact/Hero";
 import ContactInfo from "@/components/contact/ContactInfo";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Contact Us | UNV Oman",
+  description:
+    "Contact UNV Oman for product enquiries, project consultation, quotations and professional guidance on video surveillance, CCTV and integrated security solutions across Oman.",
+};
+
+
 
 export default function ContactPage() {
   return (

@@ -7,17 +7,16 @@ export default function ProductsHero() {
       id="hero"
       className="relative flex min-h-screen overflow-hidden bg-zinc-950"
     >
-      <div
-        className="absolute inset-0 animate-[heroZoom_12s_ease-in-out_infinite_alternate] bg-cover bg-center"
-        style={{
-          backgroundImage: `url('${productsHeroContent.image}')`,
-        }}
-      />
+        <div
+          className="absolute inset-0 animate-[heroZoom_12s_ease-in-out_infinite_alternate] bg-cover bg-center"
+          style={{
+            backgroundImage: `url('${productsHeroContent.image}')`,
+          }}
+        />
 
-      <div className="absolute inset-0 bg-gradient-to-r from-zinc-950 via-zinc-950/80 to-zinc-950/40" />
+  <div className="absolute inset-0 bg-gradient-to-r from-zinc-950/70 via-zinc-950/40 to-zinc-950/10" />
 
-      <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-zinc-950/50" />
-
+   <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/60 via-transparent to-zinc-950/20" />
       <div className="relative z-10 flex min-h-screen w-full items-center">
         <div className="-mt-18 mx-auto w-full max-w-7xl px-6 py-24 lg:px-8">
           <div className="relative h-[340px] md:h-[380px] lg:h-[420px]">

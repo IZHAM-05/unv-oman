@@ -4,6 +4,8 @@ import {
   useState,
   type ChangeEvent,
   type FormEvent,
+  type KeyboardEvent,
+  type ClipboardEvent,
 } from "react";
 
 import FadeIn from "@/components/common/FadeIn";
@@ -22,12 +24,83 @@ const initialFormData: ContactFormData = {
   agreeToTerms: false,
 };
 
-const inputClassName =
-  "mt-2 w-full rounded-lg border border-zinc-200 bg-white px-4 py-3.5 text-sm text-zinc-950 outline-none transition-all duration-300 placeholder:text-zinc-400 hover:border-zinc-300 focus:border-[#005BAC] focus:ring-4 focus:ring-blue-600/[0.07]";
-
 export default function ContactForm() {
-  const [formData, setFormData] =
+  const inputClassName =
+    "mt-2 w-full rounded-lg border border-zinc-200 bg-white px-4 py-3.5 text-sm text-zinc-950 outline-none transition-all duration-300 placeholder:text-zinc-400 hover:border-zinc-300 focus:border-[#005BAC] focus:ring-4 focus:ring-blue-600/[0.07]";
+
+    const [formData, setFormData] =
     useState<ContactFormData>(initialFormData);
+
+  const [errors, setErrors] = useState<
+    Partial<Record<keyof ContactFormData, string>>
+  >({});
+
+  const hasError = (field: keyof ContactFormData) =>
+    Boolean(errors[field]);
+
+  const getInputClassName = (field: keyof ContactFormData) =>
+    `${inputClassName} ${
+      hasError(field)
+        ? "border-red-500 focus:border-red-500 focus:ring-red-500/10"
+        : ""
+    }`;
+
+  const validateFullName = (fullName: string) => {
+    const trimmed = fullName.trim();
+    return trimmed.length >= 3 && /^[A-Za-z ]+$/.test(trimmed);
+  };
+
+  const validateEmail = (email: string) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
+  const normalizePhone = (phone: string) =>
+    phone.replace(/\D/g, "");
+
+  const validatePhone = (phone: string) => {
+    const normalized = normalizePhone(phone);
+    return /^[0-9]{10,15}$/.test(normalized);
+  };
+
+  const validateMessage = (message: string) => {
+    return message.trim().length >= 20;
+  };
+
+  const handlePhoneKeyDown = (
+    event: KeyboardEvent<HTMLInputElement>,
+  ) => {
+    const allowedKeys = [
+      "Backspace",
+      "Delete",
+      "ArrowLeft",
+      "ArrowRight",
+      "Home",
+      "End",
+      "Tab",
+    ];
+
+    if (
+      allowedKeys.includes(event.key) ||
+      event.ctrlKey ||
+      event.metaKey
+    ) {
+      return;
+    }
+
+    if (!/^[0-9]$/.test(event.key)) {
+      event.preventDefault();
+    }
+  };
+
+  const handlePhonePaste = (
+    event: ClipboardEvent<HTMLInputElement>,
+  ) => {
+    const pasted = event.clipboardData.getData("text");
+    if (!/^[0-9]+$/.test(pasted)) {
+      event.preventDefault();
+    }
+  };
+
 
   const handleChange = (
     event: ChangeEvent<
@@ -35,31 +108,117 @@ export default function ContactForm() {
     >,
   ) => {
     const target = event.target;
-    const { name } = target;
+    const fieldName = target.name as keyof ContactFormData;
+    let value: string | boolean = target.value;
 
     if (
       target instanceof HTMLInputElement &&
       target.type === "checkbox"
     ) {
-      setFormData((current) => ({
-        ...current,
-        [name]: target.checked,
-      }));
+      value = target.checked;
+    }
 
-      return;
+    if (
+      target instanceof HTMLInputElement &&
+      target.type === "tel"
+    ) {
+      value = normalizePhone(target.value).slice(0, 15);
     }
 
     setFormData((current) => ({
       ...current,
-      [name]: target.value,
+      [fieldName]: value,
     }));
+
+    setErrors((current) => {
+      if (!current[fieldName]) {
+        return current;
+      }
+
+      const next = { ...current };
+      delete next[fieldName];
+      return next;
+    });
   };
 
-  const handleSubmit = (
-    event: FormEvent<HTMLFormElement>,
-  ) => {
-    event.preventDefault();
-  };
+    const handleSubmit = (
+      event: FormEvent<HTMLFormElement>,
+    ) => {
+      event.preventDefault();
+
+      const newErrors: Partial<
+        Record<keyof ContactFormData, string>
+      > = {};
+
+      const fullName = formData.fullName.trim();
+      const email = formData.email.trim();
+      const phone = normalizePhone(formData.phone);
+      const message = formData.message.trim();
+
+      if (!fullName) {
+        newErrors.fullName = "Full name is required.";
+      } else if (!validateFullName(fullName)) {
+        newErrors.fullName =
+          "Full name must be at least 3 letters and contain only letters and spaces.";
+      }
+
+      if (!email) {
+        newErrors.email = "Email address is required.";
+      } else if (!validateEmail(email)) {
+        newErrors.email =
+          "Please enter a valid email address.";
+      }
+
+      if (!phone) {
+        newErrors.phone = "Phone number is required.";
+      } else if (!validatePhone(phone)) {
+        newErrors.phone =
+          "Phone number must contain only digits and be between 10 and 15 digits.";
+      }
+
+      if (
+        contactFormContent.fields.company.required &&
+        !formData.company.trim()
+      ) {
+        newErrors.company = "Company name is required.";
+      }
+
+      if (!formData.productCategory) {
+        newErrors.productCategory =
+          "Please select a product category.";
+      }
+
+      if (!formData.projectScope) {
+        newErrors.projectScope =
+          "Please select a project scope.";
+      }
+
+      if (!message) {
+        newErrors.message = "Message is required.";
+      } else if (!validateMessage(message)) {
+        newErrors.message =
+          "Message should contain at least 20 characters.";
+      }
+
+      if (!formData.agreeToTerms) {
+        newErrors.agreeToTerms =
+          "You must agree before submitting.";
+      }
+
+      setErrors(newErrors);
+
+      if (Object.keys(newErrors).length > 0) {
+        return;
+      }
+
+      console.log(formData);
+
+      alert("Form validation successful!");
+
+      setFormData(initialFormData);
+
+      setErrors({});
+    };
 
   return (
     <FadeIn delay={0.1}>
@@ -155,11 +314,17 @@ export default function ContactForm() {
                   placeholder={
                     contactFormContent.fields.fullName.placeholder
                   }
-                  className={inputClassName}
+                  className={getInputClassName("fullName")}
                   required={
                     contactFormContent.fields.fullName.required
                   }
                 />
+
+                {errors.fullName && (
+                  <p className="mt-2 text-sm text-red-600">
+                    {errors.fullName}
+                  </p>
+                )}
               </div>
 
               <div>
@@ -183,11 +348,17 @@ export default function ContactForm() {
                   placeholder={
                     contactFormContent.fields.email.placeholder
                   }
-                  className={inputClassName}
+                  className={getInputClassName("email")}
                   required={
                     contactFormContent.fields.email.required
                   }
                 />
+
+                {errors.email && (
+                  <p className="mt-2 text-sm text-red-600">
+                    {errors.email}
+                  </p>
+                )}
               </div>
 
               <div>
@@ -206,16 +377,27 @@ export default function ContactForm() {
                   id="phone"
                   name="phone"
                   type="tel"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  maxLength={15}
                   value={formData.phone}
                   onChange={handleChange}
+                  onKeyDown={handlePhoneKeyDown}
+                  onPaste={handlePhonePaste}
                   placeholder={
                     contactFormContent.fields.phone.placeholder
                   }
-                  className={inputClassName}
+                  className={getInputClassName("phone")}
                   required={
                     contactFormContent.fields.phone.required
                   }
                 />
+
+                {errors.phone && (
+                  <p className="mt-2 text-sm text-red-600">
+                    {errors.phone}
+                  </p>
+                )}
               </div>
 
               <div>
@@ -239,11 +421,17 @@ export default function ContactForm() {
                   placeholder={
                     contactFormContent.fields.company.placeholder
                   }
-                  className={inputClassName}
+                  className={getInputClassName("company")}
                   required={
                     contactFormContent.fields.company.required
                   }
                 />
+
+                {errors.company && (
+                  <p className="mt-2 text-sm text-red-600">
+                    {errors.company}
+                  </p>
+                )}
               </div>
 
               <div>
@@ -268,7 +456,7 @@ export default function ContactForm() {
                     name="productCategory"
                     value={formData.productCategory}
                     onChange={handleChange}
-                    className={`${inputClassName} appearance-none pr-11`}
+                    className={`${getInputClassName("productCategory")} appearance-none pr-11`}
                     required={
                       contactFormContent.fields.productCategory
                         .required
@@ -290,6 +478,12 @@ export default function ContactForm() {
                       </option>
                     ))}
                   </select>
+
+                  {errors.productCategory && (
+                    <p className="mt-2 text-sm text-red-600">
+                      {errors.productCategory}
+                    </p>
+                  )}
 
                   <svg
                     className="pointer-events-none absolute right-4 top-1/2 mt-1 h-4 w-4 -translate-y-1/2 text-zinc-400"
@@ -327,7 +521,7 @@ export default function ContactForm() {
                     name="projectScope"
                     value={formData.projectScope}
                     onChange={handleChange}
-                    className={`${inputClassName} appearance-none pr-11`}
+                    className={`${getInputClassName("projectScope")} appearance-none pr-11`}
                     required={
                       contactFormContent.fields.projectScope
                         .required
@@ -351,6 +545,12 @@ export default function ContactForm() {
                       ),
                     )}
                   </select>
+
+                  {errors.projectScope && (
+                    <p className="mt-2 text-sm text-red-600">
+                      {errors.projectScope}
+                    </p>
+                  )}
 
                   <svg
                     className="pointer-events-none absolute right-4 top-1/2 mt-1 h-4 w-4 -translate-y-1/2 text-zinc-400"
@@ -390,11 +590,17 @@ export default function ContactForm() {
                   placeholder={
                     contactFormContent.fields.message.placeholder
                   }
-                  className={`${inputClassName} min-h-[135px] resize-y`}
+                  className={`${getInputClassName("message")} min-h-[135px] resize-y`}
                   required={
                     contactFormContent.fields.message.required
                   }
                 />
+
+                {errors.message && (
+                  <p className="mt-2 text-sm text-red-600">
+                    {errors.message}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -405,7 +611,9 @@ export default function ContactForm() {
                 type="checkbox"
                 checked={formData.agreeToTerms}
                 onChange={handleChange}
-                className="mt-1 h-4 w-4 shrink-0 rounded border-zinc-300 text-[#005BAC] focus:ring-[#005BAC]"
+                className={`mt-1 h-4 w-4 shrink-0 rounded border-zinc-300 text-[#005BAC] focus:ring-[#005BAC] ${
+                  errors.agreeToTerms ? "border-red-500" : ""
+                }`}
                 required
               />
 
@@ -423,6 +631,12 @@ export default function ContactForm() {
                 </a>
               </label>
             </div>
+
+            {errors.agreeToTerms && (
+              <p className="mt-2 text-sm text-red-600">
+                {errors.agreeToTerms}
+              </p>
+            )}
 
             <button
               type="submit"

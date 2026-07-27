@@ -3,6 +3,7 @@ import FadeIn from "@/components/common/FadeIn";
 import SectionTitle from "@/components/common/SectionTitle";
 import { Category, Subcategory } from "@/types/product";
 
+
 type ProductModelsProps = {
   category: Category;
   subcategory: Subcategory;

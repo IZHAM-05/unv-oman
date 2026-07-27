@@ -194,7 +194,7 @@ export const homeCTAContent: HomeCTAContent = {
   heading: "Planning a security project in Oman?",
   description:
     "Tell us about your surveillance requirements and explore suitable UNV products for your site, coverage objectives and recording needs.",
-  image: "https://picsum.photos/id/1015/1600/1200",
+  image: "/images/about/about-cta.jpeg",
   imageLabel: "UNV Video Surveillance Solutions",
   eyebrow: "Project Enquiry",
   title: "Plan the Right Surveillance System",

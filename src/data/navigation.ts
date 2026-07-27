@@ -3,7 +3,7 @@ import type { NavigationContent } from "@/types/navigation";
 export const navigationContent: NavigationContent = {
   logo: {
     image:
-      "https://www.unvdubai.com/_astro/UNVLOGO.B2902jCZ_Z2pRAWs.webp",
+      "/images/logos/unv.png",
     alt: "UNV Oman logo",
     href: "/",
   },
