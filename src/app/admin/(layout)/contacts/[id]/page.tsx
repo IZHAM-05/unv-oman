@@ -23,11 +23,10 @@ export default async function ContactDetailsPage({
   }
 
   return (
-    <div className="min-h-screen bg-zinc-100 p-8">
-      <div className="mx-auto max-w-5xl rounded-xl border border-zinc-200 bg-white shadow-sm">
-
-        <div className="border-b border-zinc-200 px-8 py-6">
-          <h1 className="text-3xl font-bold text-zinc-900">
+    <div className="mx-auto max-w-6xl">
+      <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm">
+        <div className="border-b border-zinc-200 px-5 py-5 sm:px-8 sm:py-6">
+          <h1 className="text-2xl font-bold text-zinc-900 sm:text-3xl">
             Contact Details
           </h1>
 
@@ -36,8 +35,7 @@ export default async function ContactDetailsPage({
           </p>
         </div>
 
-        <div className="grid gap-6 p-8 md:grid-cols-2">
-
+        <div className="grid gap-5 p-5 sm:p-8 md:grid-cols-2">
           <InfoCard
             title="Full Name"
             value={contact.fullName}
@@ -70,21 +68,21 @@ export default async function ContactDetailsPage({
 
           <InfoCard
             title="Submitted On"
-            value={new Date(contact.createdAt).toLocaleString()}
+            value={new Date(contact.createdAt).toLocaleString(
+              "en-GB"
+            )}
           />
-
         </div>
 
-        <div className="border-t border-zinc-200 p-8">
-          <h2 className="mb-3 text-lg font-semibold text-zinc-900">
+        <div className="border-t border-zinc-200 p-5 sm:p-8">
+          <h2 className="mb-3 text-lg font-semibold">
             Message
           </h2>
 
-          <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-5 leading-7 text-zinc-700">
+          <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-5 leading-7">
             {contact.message}
           </div>
         </div>
-
       </div>
     </div>
   );
@@ -103,7 +101,7 @@ function InfoCard({
         {title}
       </p>
 
-      <div className="rounded-lg border border-zinc-200 bg-zinc-50 px-4 py-3 text-zinc-900">
+      <div className="rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-3">
         {value}
       </div>
     </div>

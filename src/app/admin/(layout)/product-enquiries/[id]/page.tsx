@@ -42,11 +42,10 @@ export default async function ProductEnquiryDetailsPage({
   );
 
   return (
-    <div className="min-h-screen bg-zinc-100 p-8">
-      <div className="mx-auto max-w-6xl rounded-xl border border-zinc-200 bg-white shadow-sm">
-
-        <div className="border-b border-zinc-200 px-8 py-6">
-          <h1 className="text-3xl font-bold text-zinc-900">
+    <div className="mx-auto max-w-7xl">
+      <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm">
+        <div className="border-b border-zinc-200 px-5 py-5 sm:px-8 sm:py-6">
+          <h1 className="text-2xl font-bold text-zinc-900 sm:text-3xl">
             Product Enquiry
           </h1>
 
@@ -55,20 +54,15 @@ export default async function ProductEnquiryDetailsPage({
           </p>
         </div>
 
-        <div className="grid gap-10 p-8 lg:grid-cols-2">
-
-          {/* Product */}
-
+        <div className="grid gap-8 p-5 sm:p-8 lg:grid-cols-2">
           <div>
-
-            <h2 className="mb-6 text-xl font-semibold">
+            <h2 className="mb-5 text-xl font-semibold">
               Product Information
             </h2>
 
             {product && (
               <div className="overflow-hidden rounded-xl border border-zinc-200 bg-zinc-50">
-
-                <div className="relative aspect-square w-full">
+                <div className="relative aspect-square w-full max-w-sm mx-auto">
                   <Image
                     src={product.image}
                     alt={product.name}
@@ -77,8 +71,7 @@ export default async function ProductEnquiryDetailsPage({
                   />
                 </div>
 
-                <div className="border-t border-zinc-200 bg-white p-6">
-
+                <div className="border-t border-zinc-200 bg-white p-5">
                   <InfoCard
                     title="Product"
                     value={product.name}
@@ -93,24 +86,17 @@ export default async function ProductEnquiryDetailsPage({
                     title="Subcategory"
                     value={subcategory?.name ?? "-"}
                   />
-
                 </div>
-
               </div>
             )}
-
           </div>
 
-          {/* Customer */}
-
           <div>
-
-            <h2 className="mb-6 text-xl font-semibold">
+            <h2 className="mb-5 text-xl font-semibold">
               Customer Information
             </h2>
 
-            <div className="rounded-xl border border-zinc-200 bg-white p-6">
-
+            <div className="rounded-xl border border-zinc-200 bg-white p-5">
               <InfoCard
                 title="Full Name"
                 value={enquiry.fullName}
@@ -130,15 +116,11 @@ export default async function ProductEnquiryDetailsPage({
                 title="Submitted On"
                 value={new Date(
                   enquiry.createdAt
-                ).toLocaleString()}
+                ).toLocaleString("en-GB")}
               />
-
             </div>
-
           </div>
-
         </div>
-
       </div>
     </div>
   );
@@ -153,15 +135,13 @@ function InfoCard({
 }) {
   return (
     <div className="mb-5">
-
       <p className="mb-2 text-sm font-medium text-zinc-500">
         {title}
       </p>
 
-      <div className="rounded-lg border border-zinc-200 bg-zinc-50 px-4 py-3">
+      <div className="rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-3">
         {value}
       </div>
-
     </div>
   );
 }
