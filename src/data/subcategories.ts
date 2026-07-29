@@ -400,7 +400,7 @@ export const subcategories: Subcategory[] = [
     categoryId: 16,
     name: "Indoor Stations",
     slug: "indoor-stations",
-    image: "/images/subcategories/video-intercoms/indoor-stations.png",
+    image: "/images/subcategories/video-intercoms/indoor-Stations.png",
   },
   {
     id: 50,
