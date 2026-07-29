@@ -496,7 +496,7 @@ export const products: Product[] = [
     categoryId: 1,
     subcategoryId: 9,
     name: "RVS441@2D-D15-OS",
-    slug: "rvs441@2d-d15-os",
+    slug: "rvs441-2d-d15-os",
     image: "/images/products/network-camera/rvs441@2d-d15-os.png",
     description: "Special-purpose 2MP dual-lens network camera, integrated with 15m IR and advanced video analytics.",
     specifications: [
@@ -528,7 +528,7 @@ export const products: Product[] = [
     categoryId: 1,
     subcategoryId: 9,
     name: "RVS441@2D-D30-OS",
-    slug: "rvs441@2d-d30-os",
+    slug: "rvs441-2d-d30-os",
     image: "/images/products/network-camera/rvs441@2d-d30-os.png",
     description: "Special-purpose 2MP dual-lens network camera with 30m IR, ruggedised for demanding environments.",
     specifications: [
@@ -2043,7 +2043,7 @@ export const products: Product[] = [
     categoryId: 10,
     subcategoryId: 33,
     name: "IS2000-8GT2GP-POE-IN@PWR120",
-    slug: "is2000-8gt2gp-poe-in@pwr120",
+    slug: "is2000-8gt2gp-poe-in-pwr120",
     image: "/images/products/transmission/is2000-8gt2gp-poe-in@pwr120.png",
     description: "Industrial 8+2G Gigabit PoE switch, -40°C to 75°C, managed, redundant power, 120W.",
     specifications: [
@@ -2336,7 +2336,7 @@ export const products: Product[] = [
     categoryId: 12,
     subcategoryId: 39,
     name: "VS-R5320-B2X@N-IN",
-    slug: "vs-r5320-b2x@n-in",
+    slug: "vs-r5320-b2x-n-in",
     image: "/images/products/server-products/vs-r5320-b2x@n-in.png",
     description: "2U dual-socket video management server, Intel Xeon, high performance, RAID, 4x GbE.",
     specifications: [
@@ -2368,7 +2368,7 @@ export const products: Product[] = [
     categoryId: 12,
     subcategoryId: 39,
     name: "VS-R5320-B1H@N-IN",
-    slug: "vs-r5320-b1h@n-in",
+    slug: "vs-r5320-b1h-n-in",
     image: "/images/products/server-products/vs-r5320-b1h@n-in.png",
     description: "2U single-socket video server, Intel Xeon, cost-effective, 8 HDDs, RAID.",
     specifications: [
@@ -3662,7 +3662,7 @@ export const products: Product[] = [
     categoryId: 20,
     subcategoryId: 62,
     name: "LENS-C2514-12M@A-OS",
-    slug: "lens-c2514-12m@a-os",
+    slug: "lens-c2514-12ma-os",
     image: "/images/products/accessories/lens-c2514-12m@a-os.png",
     description: "12MP C-mount lens, 25mm, F1.4, manual iris, for high-resolution traffic/industrial cameras.",
     specifications: [
