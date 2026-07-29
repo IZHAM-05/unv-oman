@@ -141,7 +141,7 @@ export default function ContactForm() {
     });
   };
 
-    const handleSubmit = (
+    const handleSubmit = async  (
       event: FormEvent<HTMLFormElement>,
     ) => {
       event.preventDefault();
@@ -211,13 +211,30 @@ export default function ContactForm() {
         return;
       }
 
-      console.log(formData);
+      try {
+        const response = await fetch("/api/contact", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        });
 
-      alert("Form validation successful!");
+        const result = await response.json();
 
-      setFormData(initialFormData);
+        if (!response.ok) {
+          throw new Error(result.message || "Something went wrong.");
+        }
 
-      setErrors({});
+        alert("Enquiry submitted successfully.");
+
+        setFormData(initialFormData);
+        setErrors({});
+      } catch (error) {
+        console.error(error);
+
+        alert("Failed to submit enquiry.");
+      }
     };
 
   return (

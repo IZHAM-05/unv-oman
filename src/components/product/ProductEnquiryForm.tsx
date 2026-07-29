@@ -121,42 +121,72 @@ export default function ProductEnquiryForm({
       [name]: "",
     }));
   };
+const handleSubmit = async (
+  event: FormEvent<HTMLFormElement>,
+) => {
+  event.preventDefault();
 
-  const handleSubmit = (
-    event: FormEvent<HTMLFormElement>,
-  ) => {
-    event.preventDefault();
+  const nextErrors: ProductEnquiryFormErrors = {};
 
-    const nextErrors: ProductEnquiryFormErrors = {};
+  if (!validateName(formData.fullName)) {
+    nextErrors.fullName =
+      "Please enter a valid full name.";
+  }
 
-    if (!validateName(formData.fullName)) {
-      nextErrors.fullName =
-        "Please enter a valid full name.";
-    }
+  if (!validateEmail(formData.email)) {
+    nextErrors.email =
+      "Please enter a valid email address.";
+  }
 
-    if (!validateEmail(formData.email)) {
-      nextErrors.email =
-        "Please enter a valid email address.";
-    }
+  if (!validatePhone(formData.phone)) {
+    nextErrors.phone =
+      "Phone number must contain only digits and be between 10 and 15 digits.";
+  }
 
-    if (!validatePhone(formData.phone)) {
-      nextErrors.phone =
-        "Phone number must contain only digits and be between 10 and 15 digits.";
-    }
+  if (!formData.agreeToTerms) {
+    nextErrors.agreeToTerms =
+      "You must agree before submitting.";
+  }
 
-    if (!formData.agreeToTerms) {
-      nextErrors.agreeToTerms =
-        "You must agree before submitting.";
-    }
+  setErrors(nextErrors);
 
-    setErrors(nextErrors);
+  if (Object.keys(nextErrors).length > 0) {
+    return;
+  }
 
-    if (Object.keys(nextErrors).length > 0) {
-      return;
+  try {
+    const response = await fetch("/api/product-enquiry", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...formData,
+        category: category.name,
+        subcategory: subcategory.name,
+        product: product.name,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        data.message || "Something went wrong.",
+      );
     }
 
     setIsSubmitted(true);
-  };
+
+    setFormData(initialFormData);
+  } catch (error) {
+    console.error("Product Enquiry Error:", error);
+
+    alert(
+      "Failed to submit enquiry. Please try again.",
+    );
+  }
+};
 
   if (isSubmitted) {
     return (

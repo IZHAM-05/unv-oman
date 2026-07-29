@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
+
 import "./globals.css";
-import Navbar from "@/components/common/Navbar";
-import Footer from "@/components/common/Footer";
+
+import LayoutWrapper from "@/components/common/LayoutWrapper";
 
 export const metadata: Metadata = {
   title: "UNV Oman",
@@ -17,9 +18,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Navbar />
-        <div>{children}</div>
-        <Footer />
+        <LayoutWrapper>
+          {children}
+        </LayoutWrapper>
       </body>
     </html>
   );

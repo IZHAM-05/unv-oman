@@ -1,0 +1,26 @@
+"use client";
+
+import { usePathname } from "next/navigation";
+
+import Navbar from "@/components/common/Navbar";
+import Footer from "@/components/common/Footer";
+
+export default function LayoutWrapper({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const pathname = usePathname();
+
+  const isAdminRoute = pathname.startsWith("/admin");
+
+  return (
+    <>
+      {!isAdminRoute && <Navbar />}
+
+      <main>{children}</main>
+
+      {!isAdminRoute && <Footer />}
+    </>
+  );
+}
