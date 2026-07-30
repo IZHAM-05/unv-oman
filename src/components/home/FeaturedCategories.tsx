@@ -52,9 +52,7 @@ export default function FeaturedCategories() {
 
                 <div className="absolute bottom-0 left-0 top-0 z-20 w-0.5 origin-center scale-y-0 bg-blue-600 transition-transform duration-300 group-hover:scale-y-100" />
 
-                <div className="absolute right-4 top-4 z-10 font-mono text-[56px] font-light leading-none tracking-tighter text-white/[0.06] transition-colors duration-500 group-hover:text-white/10">
-                  {String(index + 1).padStart(2, "0")}
-                </div>
+                
 
                 <div className="relative z-10 translate-y-[80px] p-6 transition-transform duration-500 ease-[cubic-bezier(0.33,1,0.68,1)] group-hover:translate-y-0">
                   <h3 className="text-xl font-bold tracking-tight text-white">

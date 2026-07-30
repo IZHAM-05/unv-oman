@@ -57,43 +57,41 @@ export default function FeaturedProducts() {
               <FadeIn key={product.id} delay={index * 0.06}>
                 <Link
                   href={`/products/${category.slug}/${subcategory.slug}/${product.slug}`}
-                  className="group relative flex aspect-[3/4] cursor-pointer flex-col justify-end overflow-hidden rounded-xl border border-zinc-200/50 bg-zinc-950 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-zinc-300 hover:shadow-xl hover:shadow-zinc-900/10"
+                  className="group relative flex aspect-[3/4] cursor-pointer flex-col justify-end overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-zinc-200/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:ring-zinc-300"
                 >
-                  <div className="absolute inset-0 bg-zinc-950" />
-
+                  {/* Image */}
                   <img
                     src={product.image}
                     alt={product.name}
                     className="absolute inset-0 h-full w-full object-contain p-4 transition-transform duration-[900ms] ease-[cubic-bezier(0.33,1,0.68,1)] group-hover:scale-105"
                   />
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/45 to-transparent transition-opacity duration-500 group-hover:opacity-95" />
+                  {/* Light gradient overlay for text readability */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-white via-white/60 to-transparent transition-opacity duration-500 group-hover:opacity-90" />
 
-                  <div className="absolute inset-0 bg-blue-600/0 transition-colors duration-700 group-hover:bg-blue-600/10" />
-
+                  {/* Hover accent line */}
                   <div className="absolute bottom-0 left-0 top-0 z-20 w-0.5 origin-center scale-y-0 bg-blue-600 transition-transform duration-300 group-hover:scale-y-100" />
 
-                  <div className="absolute right-3 top-3 z-10 font-mono text-[36px] font-light leading-none tracking-tighter text-white/[0.06] transition-colors duration-500 group-hover:text-white/10">
-                    {String(index + 1).padStart(2, "0")}
-                  </div>
+                
 
+                  {/* Content */}
                   <div className="relative z-10 translate-y-[58px] p-4 transition-transform duration-500 ease-[cubic-bezier(0.33,1,0.68,1)] group-hover:translate-y-0">
-                    <span className="text-[8px] font-bold uppercase tracking-[0.18em] text-blue-300">
+                    <span className="text-[8px] font-bold uppercase tracking-[0.18em] text-blue-600">
                       {category.name}
                     </span>
 
-                    <h3 className="mt-2 line-clamp-2 text-[13px] font-semibold leading-tight tracking-tight text-white">
+                    <h3 className="mt-2 line-clamp-2 text-[13px] font-semibold leading-tight tracking-tight text-zinc-900">
                       {product.name}
                     </h3>
 
                     <div className="mb-3 mt-3 h-px w-6 bg-blue-500 transition-all duration-500 group-hover:w-14" />
 
                     <div className="opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-                      <p className="line-clamp-2 text-[10px] leading-5 text-white/65">
+                      <p className="line-clamp-2 text-[10px] leading-5 text-zinc-600">
                         {subcategory.name}
                       </p>
 
-                      <div className="mt-3 flex items-center gap-1.5 text-[10px] font-semibold tracking-wide text-white">
+                      <div className="mt-3 flex items-center gap-1.5 text-[10px] font-semibold tracking-wide text-blue-600">
                         <span>{featuredProductsContent.actionLabel}</span>
 
                         <svg

@@ -11,6 +11,11 @@ export const navigationContent: NavigationContent = {
   links: [
 
     {
+      name:"Home",
+      href:"/"
+    },
+
+    {
       name: "Products",
       href: "/products",
     },

@@ -6,6 +6,7 @@ import {
   useRef,
   useState,
   type MouseEvent,
+  type ChangeEvent,
 } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -14,6 +15,7 @@ import {
   ChevronDown,
   ChevronRight,
   Menu,
+  Search,
   X,
 } from "lucide-react";
 
@@ -33,20 +35,62 @@ export default function Navbar() {
   const [selectedCategorySlug, setSelectedCategorySlug] = useState(
     productCategories[0]?.slug ?? ""
   );
-
   const [selectedSubcategorySlug, setSelectedSubcategorySlug] = useState(
     productCategories[0]?.subcategories[0]?.slug ?? ""
   );
-
   const [selectedSolutionSlug, setSelectedSolutionSlug] = useState(
     solutions[0]?.slug ?? ""
   );
 
   const [isMobileProductsOpen, setIsMobileProductsOpen] = useState(false);
   const [isMobileSolutionsOpen, setIsMobileSolutionsOpen] = useState(false);
-
   const [mobileExpandedCategorySlug, setMobileExpandedCategorySlug] = useState("");
   const [mobileExpandedSubcategorySlug, setMobileExpandedSubcategorySlug] = useState("");
+
+  // ----- Search state -----
+  const [searchQuery, setSearchQuery] = useState("");
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  // Flatten all products for search
+  const allProducts = useMemo(() => {
+    const result: { product: any; categorySlug: string; subcategorySlug: string }[] = [];
+    for (const category of productCategories) {
+      for (const subcategory of category.subcategories) {
+        for (const product of subcategory.products) {
+          result.push({
+            product,
+            categorySlug: category.slug,
+            subcategorySlug: subcategory.slug,
+          });
+        }
+      }
+    }
+    return result;
+  }, []);
+
+  const filteredProducts = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return [];
+    return allProducts.filter(({ product }) =>
+      product.name.toLowerCase().includes(query)
+    );
+  }, [searchQuery, allProducts]);
+
+  // Clear search when products menu closes
+  useEffect(() => {
+    if (!isProductsMenuOpen) {
+      setSearchQuery("");
+    }
+  }, [isProductsMenuOpen]);
+
+  // Focus search input when menu opens
+  useEffect(() => {
+    if (isProductsMenuOpen && searchInputRef.current) {
+      setTimeout(() => searchInputRef.current?.focus(), 100);
+    }
+  }, [isProductsMenuOpen]);
+
+  // ----- End search state -----
 
   const productsCloseTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const solutionsCloseTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -217,6 +261,9 @@ export default function Navbar() {
   const isFloatingInsideHero = hasHero && !isPastHero && hasStartedScrolling;
   const isFloatingLight = !hasHero || isPastHero;
 
+  // ----- NEW: Force dropdowns to always use light theme -----
+  const dropdownThemeIsLight = true;
+
   const desktopLinkClass = (href: string) =>
     `group relative whitespace-nowrap text-sm font-semibold transition-all duration-300 ${
       isActive(href)
@@ -369,11 +416,11 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* Desktop Products Mega Menu */}
+      {/* ============================================================ */}
       {isProductsMenuOpen && (
         <div
           className={`absolute left-[8.5rem] right-[8.5rem] top-[66px] hidden border-b backdrop-blur-xl before:absolute before:-top-3 before:left-0 before:right-0 before:h-5 before:content-[''] lg:block ${
-            isFloatingLight
+            dropdownThemeIsLight
               ? "border-[#C9E1F5] bg-[#EAF5FD]/95 shadow-[0_30px_80px_-30px_rgba(0,91,172,0.25)]"
               : "border-white/[0.09] bg-[#05090D]/88 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.9)]"
           }`}
@@ -381,9 +428,10 @@ export default function Navbar() {
           onMouseLeave={scheduleProductsMenuClose}
         >
           <div className="grid min-h-[440px] w-full grid-cols-[minmax(250px,0.8fr)_minmax(280px,0.9fr)_minmax(0,3.3fr)]">
-            <section className={`border-r ${isFloatingLight ? "border-[#C9E1F5]" : "border-white/[0.08]"}`}>
-              <div className={`flex h-20 items-center border-b px-8 ${isFloatingLight ? "border-[#C9E1F5]" : "border-white/[0.08]"}`}>
-                <p className={`text-[10px] font-bold uppercase tracking-[0.28em] ${isFloatingLight ? "text-[#005BAC]" : "text-[#66B8EF]"}`}>
+            {/* Categories column */}
+            <section className={`border-r ${dropdownThemeIsLight ? "border-[#C9E1F5]" : "border-white/[0.08]"}`}>
+              <div className={`flex h-20 items-center border-b px-8 ${dropdownThemeIsLight ? "border-[#C9E1F5]" : "border-white/[0.08]"}`}>
+                <p className={`text-[10px] font-bold uppercase tracking-[0.28em] ${dropdownThemeIsLight ? "text-[#005BAC]" : "text-[#66B8EF]"}`}>
                   Categories
                 </p>
               </div>
@@ -399,10 +447,10 @@ export default function Navbar() {
                       onMouseEnter={() => handleCategoryHover(category.slug)}
                       className={`group/category relative flex min-h-[54px] items-center justify-between gap-3 px-8 py-3 text-sm font-semibold transition-all duration-200 ${
                         isSelected
-                          ? isFloatingLight
+                          ? dropdownThemeIsLight
                             ? "bg-[#005BAC]/10 text-[#005BAC]"
                             : "bg-white/[0.055] text-white"
-                          : isFloatingLight
+                          : dropdownThemeIsLight
                           ? "text-slate-600 hover:bg-[#005BAC]/5 hover:text-[#005BAC]"
                           : "text-zinc-500 hover:bg-white/[0.035] hover:text-white"
                       }`}
@@ -415,7 +463,7 @@ export default function Navbar() {
 
                       <div className="flex min-w-0 items-center gap-3">
                         <div className={`h-9 w-9 shrink-0 overflow-hidden rounded-md border p-[2px] ${
-                          isFloatingLight 
+                          dropdownThemeIsLight 
                             ? "border-[#C9E1F5] bg-white shadow-[0_2px_8px_-2px_rgba(0,91,172,0.15)]" 
                             : "border-slate-800 bg-[#0B1220] shadow-[0_0_0_2px_rgba(255,255,255,0.8),0_10px_20px_rgba(2,6,23,0.45)]"
                         }`}>
@@ -428,10 +476,10 @@ export default function Navbar() {
                       <ChevronRight
                         className={`h-4 w-4 shrink-0 transition-all duration-200 ${
                           isSelected
-                            ? isFloatingLight
+                            ? dropdownThemeIsLight
                               ? "text-[#005BAC]"
                               : "text-[#66B8EF]"
-                            : isFloatingLight
+                            : dropdownThemeIsLight
                             ? "text-slate-400 group-hover/category:translate-x-1 group-hover/category:text-[#005BAC]"
                             : "text-zinc-700 group-hover/category:translate-x-1 group-hover/category:text-[#66B8EF]"
                         }`}
@@ -442,14 +490,15 @@ export default function Navbar() {
               </div>
             </section>
 
-            <section className={`border-r ${isFloatingLight ? "border-[#C9E1F5]" : "border-white/[0.08]"}`}>
-              <div className={`flex h-20 items-center border-b px-8 ${isFloatingLight ? "border-[#C9E1F5]" : "border-white/[0.08]"}`}>
+            {/* Subcategories column */}
+            <section className={`border-r ${dropdownThemeIsLight ? "border-[#C9E1F5]" : "border-white/[0.08]"}`}>
+              <div className={`flex h-20 items-center border-b px-8 ${dropdownThemeIsLight ? "border-[#C9E1F5]" : "border-white/[0.08]"}`}>
                 <div className="min-w-0">
-                  <p className={`text-[10px] font-bold uppercase tracking-[0.28em] ${isFloatingLight ? "text-[#005BAC]" : "text-[#66B8EF]"}`}>
+                  <p className={`text-[10px] font-bold uppercase tracking-[0.28em] ${dropdownThemeIsLight ? "text-[#005BAC]" : "text-[#66B8EF]"}`}>
                     Product Series
                   </p>
 
-                  <p className={`mt-2 truncate text-xs font-semibold ${isFloatingLight ? "text-slate-500" : "text-zinc-500"}`}>
+                  <p className={`mt-2 truncate text-xs font-semibold ${dropdownThemeIsLight ? "text-slate-500" : "text-zinc-500"}`}>
                     {selectedCategory?.name}
                   </p>
                 </div>
@@ -467,10 +516,10 @@ export default function Navbar() {
                         onMouseEnter={() => setSelectedSubcategorySlug(subcategory.slug)}
                         className={`group/series relative flex min-h-[54px] items-center justify-between gap-3 px-8 py-3 text-sm font-semibold transition-all duration-200 ${
                           isSelected
-                            ? isFloatingLight
+                            ? dropdownThemeIsLight
                               ? "bg-[#005BAC]/10 text-[#005BAC]"
                               : "bg-white/[0.055] text-white"
-                            : isFloatingLight
+                            : dropdownThemeIsLight
                             ? "text-slate-600 hover:bg-[#005BAC]/5 hover:text-[#005BAC]"
                             : "text-zinc-500 hover:bg-white/[0.035] hover:text-white"
                         }`}
@@ -483,7 +532,7 @@ export default function Navbar() {
 
                         <div className="flex min-w-0 items-center gap-3">
                           <div className={`h-9 w-9 shrink-0 overflow-hidden rounded-md border p-[2px] ${
-                            isFloatingLight 
+                            dropdownThemeIsLight 
                               ? "border-[#C9E1F5] bg-white shadow-[0_2px_8px_-2px_rgba(0,91,172,0.15)]" 
                               : "border-slate-700 bg-[#0F172A] shadow-[0_0_0_1px_rgba(255,255,255,0.45),0_8px_18px_rgba(15,23,42,0.25)]"
                           }`}>
@@ -496,10 +545,10 @@ export default function Navbar() {
                         <ChevronRight
                           className={`h-4 w-4 shrink-0 transition-all duration-200 ${
                             isSelected
-                              ? isFloatingLight
+                              ? dropdownThemeIsLight
                                 ? "text-[#005BAC]"
                                 : "text-[#66B8EF]"
-                              : isFloatingLight
+                              : dropdownThemeIsLight
                               ? "text-slate-400 group-hover/series:translate-x-1 group-hover/series:text-[#005BAC]"
                               : "text-zinc-700 group-hover/series:translate-x-1 group-hover/series:text-[#66B8EF]"
                           }`}
@@ -509,7 +558,7 @@ export default function Navbar() {
                   })
                 ) : (
                   <div className="px-8 py-10">
-                    <p className={`text-sm italic leading-7 ${isFloatingLight ? "text-slate-500" : "text-zinc-700"}`}>
+                    <p className={`text-sm italic leading-7 ${dropdownThemeIsLight ? "text-slate-500" : "text-zinc-700"}`}>
                       No product series are currently available.
                     </p>
                   </div>
@@ -517,60 +566,138 @@ export default function Navbar() {
               </div>
             </section>
 
+            {/* Products column – with search */}
             <section>
-              <div className={`flex h-20 items-center border-b px-10 ${isFloatingLight ? "border-[#C9E1F5]" : "border-white/[0.08]"}`}>
-                <div className="min-w-0">
-                  <p className={`text-[10px] font-bold uppercase tracking-[0.28em] ${isFloatingLight ? "text-[#005BAC]" : "text-[#66B8EF]"}`}>
+              <div className={`flex h-20 items-center border-b px-6 ${dropdownThemeIsLight ? "border-[#C9E1F5]" : "border-white/[0.08]"}`}>
+                <div className="min-w-0 flex-1">
+                  <p className={`text-[10px] font-bold uppercase tracking-[0.28em] ${dropdownThemeIsLight ? "text-[#005BAC]" : "text-[#66B8EF]"}`}>
                     Products
                   </p>
-
-                  <p className={`mt-2 truncate text-xs font-semibold ${isFloatingLight ? "text-slate-500" : "text-zinc-500"}`}>
-                    {selectedSubcategory?.name ?? "Select a product series"}
+                  <p className={`mt-2 truncate text-xs font-semibold ${dropdownThemeIsLight ? "text-slate-500" : "text-zinc-500"}`}>
+                    {searchQuery ? "Search results" : (selectedSubcategory?.name ?? "Select a product series")}
                   </p>
                 </div>
               </div>
 
-              <div className="navbar-scrollbar max-h-[360px] overflow-y-auto px-10 py-5">
-                {selectedCategory && selectedSubcategory && selectedSubcategory.products.length > 0 ? (
-                  <div className="grid gap-x-8 gap-y-2 lg:grid-cols-3">
-                    {selectedSubcategory.products.map((product) => (
-                      <Link
-                        key={product.slug}
-                        href={`/products/${selectedCategory.slug}/${selectedSubcategory.slug}/${product.slug}`}
-                        className={`group/product relative flex min-h-[54px] items-center justify-between gap-3 border-b py-3 text-sm font-semibold transition-colors duration-200 ${
-                          isFloatingLight
-                            ? "border-[#C9E1F5] text-slate-600 hover:text-[#005BAC]"
-                            : "border-white/[0.055] text-zinc-500 hover:text-white"
-                        }`}
-                      >
-                        <span className="absolute bottom-2 left-0 top-2 w-0.5 origin-center scale-y-0 bg-[#005BAC] transition-transform duration-200 group-hover/product:scale-y-100" />
+              <div className="navbar-scrollbar max-h-[360px] overflow-y-auto px-4 py-3">
+                {/* Search Input */}
+                <div className="relative mb-3">
+                  <Search className={`absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 ${dropdownThemeIsLight ? "text-slate-400" : "text-zinc-500"}`} />
+                  <input
+                    ref={searchInputRef}
+                    type="text"
+                    placeholder="Search products..."
+                    value={searchQuery}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
+                    className={`w-full rounded-lg border bg-transparent py-2 pl-9 pr-4 text-sm outline-none transition-colors ${
+                      dropdownThemeIsLight
+                        ? "border-[#C9E1F5] text-slate-800 placeholder:text-slate-400 focus:border-[#005BAC]"
+                        : "border-white/15 text-white placeholder:text-zinc-400 focus:border-blue-300"
+                    }`}
+                  />
+                  {searchQuery && (
+                    <button
+                      type="button"
+                      onClick={() => setSearchQuery("")}
+                      className={`absolute right-3 top-1/2 -translate-y-1/2 ${dropdownThemeIsLight ? "text-slate-400 hover:text-slate-600" : "text-zinc-400 hover:text-white"}`}
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  )}
+                </div>
 
-                        <div className="flex min-w-0 items-center gap-3 pl-4">
-                          <div className={`h-9 w-9 shrink-0 overflow-hidden rounded-md border p-[2px] ${
-                            isFloatingLight 
-                              ? "border-[#C9E1F5] bg-white shadow-[0_2px_8px_-2px_rgba(0,91,172,0.15)]" 
-                              : "border-slate-700 bg-[#0F172A] shadow-[0_0_0_1px_rgba(255,255,255,0.45),0_8px_18px_rgba(15,23,42,0.25)]"
-                          }`}>
-                            <img src={product.image} alt="" className="h-full w-full object-contain" />
-                          </div>
-
-                          <span className="min-w-0 truncate leading-6">{product.name}</span>
-                        </div>
-
-                        <ChevronRight
-                          className={`h-4 w-4 shrink-0 transition-all duration-200 ${
-                            isFloatingLight
-                              ? "text-slate-300 group-hover/product:translate-x-1 group-hover/product:text-[#005BAC]"
-                              : "text-zinc-800 group-hover/product:translate-x-1 group-hover/product:text-[#66B8EF]"
+                {/* Product List */}
+                {searchQuery ? (
+                  // Search results
+                  filteredProducts.length > 0 ? (
+                    <div className="grid gap-x-6 gap-y-1 lg:grid-cols-3">
+                      {filteredProducts.slice(0, 12).map(({ product, categorySlug, subcategorySlug }) => (
+                        <Link
+                          key={product.slug}
+                          href={`/products/${categorySlug}/${subcategorySlug}/${product.slug}`}
+                          onClick={() => {
+                            closeDesktopMenus();
+                            setIsProductsMenuOpen(false);
+                          }}
+                          className={`group/product relative flex min-h-[46px] items-center justify-between gap-3 border-b py-2.5 text-sm font-semibold transition-colors duration-200 ${
+                            dropdownThemeIsLight
+                              ? "border-[#C9E1F5] text-slate-600 hover:text-[#005BAC]"
+                              : "border-white/[0.055] text-zinc-400 hover:text-white"
                           }`}
-                        />
-                      </Link>
-                    ))}
-                  </div>
+                        >
+                          <span className="absolute bottom-2 left-0 top-2 w-0.5 origin-center scale-y-0 bg-[#005BAC] transition-transform duration-200 group-hover/product:scale-y-100" />
+
+                          <div className="flex min-w-0 items-center gap-3 pl-4">
+                            <div className={`h-8 w-8 shrink-0 overflow-hidden rounded-md border p-[1px] ${
+                              dropdownThemeIsLight 
+                                ? "border-[#C9E1F5] bg-white shadow-[0_2px_8px_-2px_rgba(0,91,172,0.15)]" 
+                                : "border-slate-700 bg-[#0F172A] shadow-[0_0_0_1px_rgba(255,255,255,0.45),0_8px_18px_rgba(15,23,42,0.25)]"
+                            }`}>
+                              <img src={product.image} alt="" className="h-full w-full object-contain" />
+                            </div>
+                            <span className="min-w-0 truncate leading-5">{product.name}</span>
+                          </div>
+                          <ChevronRight
+                            className={`h-3.5 w-3.5 shrink-0 transition-all duration-200 ${
+                              dropdownThemeIsLight
+                                ? "text-slate-300 group-hover/product:translate-x-1 group-hover/product:text-[#005BAC]"
+                                : "text-zinc-700 group-hover/product:translate-x-1 group-hover/product:text-[#66B8EF]"
+                            }`}
+                          />
+                        </Link>
+                      ))}
+                      {filteredProducts.length > 12 && (
+                        <p className={`col-span-3 mt-2 text-xs ${dropdownThemeIsLight ? "text-slate-500" : "text-zinc-500"}`}>
+                          +{filteredProducts.length - 12} more results
+                        </p>
+                      )}
+                    </div>
+                  ) : (
+                    <p className={`py-6 text-center text-sm ${dropdownThemeIsLight ? "text-slate-500" : "text-zinc-500"}`}>
+                      No products match your search.
+                    </p>
+                  )
                 ) : (
-                  <p className={`text-sm italic leading-7 ${isFloatingLight ? "text-slate-500" : "text-zinc-700"}`}>
-                    Hover over a product series to view its available models.
-                  </p>
+                  // Default: show products from selected subcategory
+                  selectedCategory && selectedSubcategory && selectedSubcategory.products.length > 0 ? (
+                    <div className="grid gap-x-6 gap-y-1 lg:grid-cols-3">
+                      {selectedSubcategory.products.map((product) => (
+                        <Link
+                          key={product.slug}
+                          href={`/products/${selectedCategory.slug}/${selectedSubcategory.slug}/${product.slug}`}
+                          className={`group/product relative flex min-h-[46px] items-center justify-between gap-3 border-b py-2.5 text-sm font-semibold transition-colors duration-200 ${
+                            dropdownThemeIsLight
+                              ? "border-[#C9E1F5] text-slate-600 hover:text-[#005BAC]"
+                              : "border-white/[0.055] text-zinc-400 hover:text-white"
+                          }`}
+                        >
+                          <span className="absolute bottom-2 left-0 top-2 w-0.5 origin-center scale-y-0 bg-[#005BAC] transition-transform duration-200 group-hover/product:scale-y-100" />
+
+                          <div className="flex min-w-0 items-center gap-3 pl-4">
+                            <div className={`h-8 w-8 shrink-0 overflow-hidden rounded-md border p-[1px] ${
+                              dropdownThemeIsLight 
+                                ? "border-[#C9E1F5] bg-white shadow-[0_2px_8px_-2px_rgba(0,91,172,0.15)]" 
+                                : "border-slate-700 bg-[#0F172A] shadow-[0_0_0_1px_rgba(255,255,255,0.45),0_8px_18px_rgba(15,23,42,0.25)]"
+                            }`}>
+                              <img src={product.image} alt="" className="h-full w-full object-contain" />
+                            </div>
+                            <span className="min-w-0 truncate leading-5">{product.name}</span>
+                          </div>
+                          <ChevronRight
+                            className={`h-3.5 w-3.5 shrink-0 transition-all duration-200 ${
+                              dropdownThemeIsLight
+                                ? "text-slate-300 group-hover/product:translate-x-1 group-hover/product:text-[#005BAC]"
+                                : "text-zinc-700 group-hover/product:translate-x-1 group-hover/product:text-[#66B8EF]"
+                            }`}
+                          />
+                        </Link>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className={`py-6 text-center text-sm ${dropdownThemeIsLight ? "text-slate-500" : "text-zinc-500"}`}>
+                      Hover over a product series to view its available models.
+                    </p>
+                  )
                 )}
               </div>
             </section>
@@ -578,11 +705,11 @@ export default function Navbar() {
         </div>
       )}
 
-      {/* Desktop Solutions Mega Menu */}
+      {/* Desktop Solutions Mega Menu – now always uses light theme */}
       {isSolutionsMenuOpen && (
         <div
           className={`absolute left-[8.5rem] right-[8.5rem] top-[66px] hidden border-b backdrop-blur-xl before:absolute before:-top-3 before:left-0 before:right-0 before:h-5 before:content-[''] lg:block ${
-            isFloatingLight
+            dropdownThemeIsLight
               ? "border-[#C9E1F5] bg-[#EAF5FD]/95 shadow-[0_30px_80px_-30px_rgba(0,91,172,0.25)]"
               : "border-white/[0.09] bg-[#05090D]/90 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.9)]"
           }`}
@@ -590,14 +717,14 @@ export default function Navbar() {
           onMouseLeave={scheduleSolutionsMenuClose}
         >
           <div className="grid min-h-[440px] w-full grid-cols-[minmax(320px,0.9fr)_minmax(0,2.4fr)]">
-            <section className={`border-r ${isFloatingLight ? "border-[#C9E1F5]" : "border-white/[0.08]"}`}>
-              <div className={`flex h-20 items-center justify-between border-b px-8 ${isFloatingLight ? "border-[#C9E1F5]" : "border-white/[0.08]"}`}>
+            <section className={`border-r ${dropdownThemeIsLight ? "border-[#C9E1F5]" : "border-white/[0.08]"}`}>
+              <div className={`flex h-20 items-center justify-between border-b px-8 ${dropdownThemeIsLight ? "border-[#C9E1F5]" : "border-white/[0.08]"}`}>
                 <div>
-                  <p className={`text-[10px] font-bold uppercase tracking-[0.28em] ${isFloatingLight ? "text-[#005BAC]" : "text-[#66B8EF]"}`}>
+                  <p className={`text-[10px] font-bold uppercase tracking-[0.28em] ${dropdownThemeIsLight ? "text-[#005BAC]" : "text-[#66B8EF]"}`}>
                     Solutions
                   </p>
 
-                  <p className={`mt-2 text-xs font-semibold ${isFloatingLight ? "text-slate-500" : "text-zinc-500"}`}>
+                  <p className={`mt-2 text-xs font-semibold ${dropdownThemeIsLight ? "text-slate-500" : "text-zinc-500"}`}>
                     Industry-focused security systems
                   </p>
                 </div>
@@ -605,7 +732,7 @@ export default function Navbar() {
                 <Link
                   href="/solutions"
                   className={`group/all flex items-center gap-2 text-xs font-semibold transition-colors ${
-                    isFloatingLight ? "text-slate-500 hover:text-[#005BAC]" : "text-zinc-500 hover:text-white"
+                    dropdownThemeIsLight ? "text-slate-500 hover:text-[#005BAC]" : "text-zinc-500 hover:text-white"
                   }`}
                 >
                   View All
@@ -624,10 +751,10 @@ export default function Navbar() {
                       onMouseEnter={() => setSelectedSolutionSlug(solution.slug)}
                       className={`group/solution relative flex min-h-[58px] items-center justify-between gap-4 px-8 py-3 text-sm font-semibold transition-all duration-200 ${
                         isSelected
-                          ? isFloatingLight
+                          ? dropdownThemeIsLight
                             ? "bg-[#005BAC]/10 text-[#005BAC]"
                             : "bg-white/[0.055] text-white"
-                          : isFloatingLight
+                          : dropdownThemeIsLight
                           ? "text-slate-600 hover:bg-[#005BAC]/5 hover:text-[#005BAC]"
                           : "text-zinc-500 hover:bg-white/[0.035] hover:text-white"
                       }`}
@@ -640,7 +767,7 @@ export default function Navbar() {
 
                       <div className="flex min-w-0 items-center gap-3">
                         <div className={`h-10 w-10 shrink-0 overflow-hidden rounded-md border p-[2px] ${
-                          isFloatingLight 
+                          dropdownThemeIsLight 
                             ? "border-[#C9E1F5] bg-white shadow-[0_2px_8px_-2px_rgba(0,91,172,0.15)]" 
                             : "border-slate-800 bg-[#0B1220] shadow-[0_0_0_2px_rgba(255,255,255,0.8),0_10px_20px_rgba(2,6,23,0.45)]"
                         }`}>
@@ -653,10 +780,10 @@ export default function Navbar() {
                       <ChevronRight
                         className={`h-4 w-4 shrink-0 transition-all duration-200 ${
                           isSelected
-                            ? isFloatingLight
+                            ? dropdownThemeIsLight
                               ? "text-[#005BAC]"
                               : "text-[#66B8EF]"
-                            : isFloatingLight
+                            : dropdownThemeIsLight
                             ? "text-slate-400 group-hover/solution:translate-x-1 group-hover/solution:text-[#005BAC]"
                             : "text-zinc-700 group-hover/solution:translate-x-1 group-hover/solution:text-[#66B8EF]"
                         }`}
@@ -678,44 +805,44 @@ export default function Navbar() {
 
                   <div
                     className={`absolute inset-0 bg-gradient-to-r ${
-                      isFloatingLight
+                      dropdownThemeIsLight
                         ? "from-[#EAF5FD] via-[#EAF5FD]/75 to-transparent"
                         : "from-[#05090D] via-[#05090D]/80 to-[#05090D]/35"
                     }`}
                   />
                   <div
                     className={`absolute inset-0 bg-gradient-to-t ${
-                      isFloatingLight
+                      dropdownThemeIsLight
                         ? "from-[#EAF5FD]/50 via-transparent to-transparent"
                         : "from-[#05090D] via-transparent to-[#05090D]/30"
                     }`}
                   />
 
                   <div
-                    className={`pointer-events-none absolute inset-0 ${isFloatingLight ? "opacity-[0.03]" : "opacity-[0.08]"}`}
+                    className={`pointer-events-none absolute inset-0 ${dropdownThemeIsLight ? "opacity-[0.03]" : "opacity-[0.08]"}`}
                     style={{
-                      backgroundImage: `radial-gradient(circle at 1px 1px, ${isFloatingLight ? "#005BAC" : "#ffffff"} 1px, transparent 0)`,
+                      backgroundImage: `radial-gradient(circle at 1px 1px, ${dropdownThemeIsLight ? "#005BAC" : "#ffffff"} 1px, transparent 0)`,
                       backgroundSize: "28px 28px",
                     }}
                   />
 
                   <div className="relative z-10 flex min-h-[440px] max-w-2xl flex-col justify-center px-12 py-12 xl:px-16">
-                    <p className={`text-[10px] font-bold uppercase tracking-[0.28em] ${isFloatingLight ? "text-[#005BAC]" : "text-[#66B8EF]"}`}>
+                    <p className={`text-[10px] font-bold uppercase tracking-[0.28em] ${dropdownThemeIsLight ? "text-[#005BAC]" : "text-[#66B8EF]"}`}>
                       Industry Solution
                     </p>
 
-                    <h3 className={`mt-5 text-3xl font-semibold tracking-tight xl:text-4xl ${isFloatingLight ? "text-slate-900" : "text-white"}`}>
+                    <h3 className={`mt-5 text-3xl font-semibold tracking-tight xl:text-4xl ${dropdownThemeIsLight ? "text-slate-900" : "text-white"}`}>
                       {selectedSolution.name}
                     </h3>
 
-                    <p className={`mt-5 line-clamp-4 max-w-xl text-sm font-light leading-7 xl:text-base ${isFloatingLight ? "text-slate-700" : "text-zinc-300"}`}>
+                    <p className={`mt-5 line-clamp-4 max-w-xl text-sm font-light leading-7 xl:text-base ${dropdownThemeIsLight ? "text-slate-700" : "text-zinc-300"}`}>
                       {selectedSolution.directoryDescription}
                     </p>
 
                     <Link
                       href={`/solutions/${selectedSolution.slug}`}
                       className={`group/action mt-8 inline-flex w-fit items-center gap-3 border px-6 py-3 text-sm font-semibold backdrop-blur-md transition-all duration-300 ${
-                        isFloatingLight
+                        dropdownThemeIsLight
                           ? "border-[#005BAC] bg-[#005BAC] text-white hover:bg-[#004A8D]"
                           : "border-white/20 bg-white/10 text-white hover:border-[#188BD7] hover:bg-[#188BD7]"
                       }`}
@@ -727,7 +854,7 @@ export default function Navbar() {
                 </>
               ) : (
                 <div className="flex min-h-[440px] items-center justify-center px-10">
-                  <p className={`text-sm italic ${isFloatingLight ? "text-slate-500" : "text-zinc-600"}`}>
+                  <p className={`text-sm italic ${dropdownThemeIsLight ? "text-slate-500" : "text-zinc-600"}`}>
                     Select a solution to view its details.
                   </p>
                 </div>
@@ -737,7 +864,7 @@ export default function Navbar() {
         </div>
       )}
 
-      {/* Mobile Navigation */}
+      {/* Mobile Navigation (unchanged – still uses isFloatingLight) */}
       {isOpen && (
         <div
           className={`max-h-[calc(100vh-4rem)] w-full overflow-y-auto border-b backdrop-blur-xl transition-all duration-500 lg:hidden ${
