@@ -31,23 +31,25 @@ export default function CategoryCard({
           : "md:col-span-2 lg:col-span-2"
       }`}
     >
+      {/* Image - clear and full */}
       <img
         src={imageUrl}
         alt={name}
         className="absolute inset-0 h-full w-full object-contain p-4 transition-transform duration-[900ms] ease-[cubic-bezier(0.33,1,0.68,1)] group-hover:scale-105"
       />
 
-      <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/50 to-transparent transition-opacity duration-500 group-hover:opacity-95" />
+      {/* Very subtle bottom gradient for text readability (almost invisible) */}
+      <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/10 via-zinc-950/5 to-transparent" />
 
-      <div className="absolute inset-0 bg-blue-600/0 transition-colors duration-700 group-hover:bg-blue-600/10" />
+      {/* Decorative left accent line */}
+      <div className="absolute bottom-0 left-0 top-0 z-20 w-0.5 origin-center scale-y-0 bg-blue-600 transition-transform duration-300 group-hover:scale-y-100" />
 
-      <div className="absolute right-5 top-5 z-10 text-[44px] font-black leading-none tracking-tighter text-white/[0.06] transition-colors duration-500 group-hover:text-white/10">
-        {categoryNumber}
-      </div>
+  
 
+      {/* Content - text now black */}
       <div className="relative z-10 h-[210px] translate-y-[116px] p-6 transition-transform duration-500 ease-[cubic-bezier(0.33,1,0.68,1)] group-hover:translate-y-0">
         <div className="flex h-[58px] items-end">
-          <h3 className="line-clamp-2 text-xl font-bold leading-[1.25] tracking-tight text-white">
+          <h3 className="line-clamp-2 text-xl font-bold leading-[1.25] tracking-tight text-black">
             {name}
           </h3>
         </div>
@@ -55,14 +57,12 @@ export default function CategoryCard({
         <div className="mb-4 mt-4 h-0.5 w-10 bg-blue-500 transition-all duration-500 ease-[cubic-bezier(0.33,1,0.68,1)] group-hover:w-20" />
 
         <div className="opacity-0 transition-all duration-500 ease-[cubic-bezier(0.33,1,0.68,1)] group-hover:opacity-100">
-          <p className="line-clamp-2 h-12 max-w-md text-xs leading-6 text-white/70">
+          <p className="line-clamp-2 h-12 max-w-md text-xs leading-6 text-black/70">
             {description}
           </p>
 
-          <div className="mt-4 flex items-center gap-2 text-xs font-semibold tracking-wide text-white">
-            <span>
-              {categoryCardContent.actionLabel}
-            </span>
+          <div className="mt-4 flex items-center gap-2 text-xs font-semibold tracking-wide text-blue-600">
+            <span>{categoryCardContent.actionLabel}</span>
 
             <svg
               className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1"

@@ -83,7 +83,7 @@ export default function Navbar() {
     }
   }, [isProductsMenuOpen]);
 
-  // Focus search input when menu opens
+  // Focus search input when desktop menu opens
   useEffect(() => {
     if (isProductsMenuOpen && searchInputRef.current) {
       setTimeout(() => searchInputRef.current?.focus(), 100);
@@ -261,8 +261,9 @@ export default function Navbar() {
   const isFloatingInsideHero = hasHero && !isPastHero && hasStartedScrolling;
   const isFloatingLight = !hasHero || isPastHero;
 
-  // ----- NEW: Force dropdowns to always use light theme -----
+  // ----- Force dropdowns to always use light theme -----
   const dropdownThemeIsLight = true;
+  const mobileThemeIsLight = true; // for mobile menu
 
   const desktopLinkClass = (href: string) =>
     `group relative whitespace-nowrap text-sm font-semibold transition-all duration-300 ${
@@ -416,7 +417,7 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* ============================================================ */}
+      {/* Desktop Products Mega Menu */}
       {isProductsMenuOpen && (
         <div
           className={`absolute left-[8.5rem] right-[8.5rem] top-[66px] hidden border-b backdrop-blur-xl before:absolute before:-top-3 before:left-0 before:right-0 before:h-5 before:content-[''] lg:block ${
@@ -705,7 +706,7 @@ export default function Navbar() {
         </div>
       )}
 
-      {/* Desktop Solutions Mega Menu – now always uses light theme */}
+      {/* Desktop Solutions Mega Menu */}
       {isSolutionsMenuOpen && (
         <div
           className={`absolute left-[8.5rem] right-[8.5rem] top-[66px] hidden border-b backdrop-blur-xl before:absolute before:-top-3 before:left-0 before:right-0 before:h-5 before:content-[''] lg:block ${
@@ -864,11 +865,11 @@ export default function Navbar() {
         </div>
       )}
 
-      {/* Mobile Navigation (unchanged – still uses isFloatingLight) */}
+      {/* ========== MOBILE NAVIGATION ========== */}
       {isOpen && (
         <div
           className={`max-h-[calc(100vh-4rem)] w-full overflow-y-auto border-b backdrop-blur-xl transition-all duration-500 lg:hidden ${
-            isFloatingLight
+            mobileThemeIsLight
               ? "border-[#C9E1F5] bg-[#EAF5FD]/98 shadow-[0_12px_35px_-20px_rgba(0,91,172,0.35)]"
               : "border-white/15 bg-zinc-950/95 shadow-[0_12px_35px_-20px_rgba(0,0,0,0.75)]"
           }`}
@@ -880,16 +881,16 @@ export default function Navbar() {
 
               if (isProductsLink) {
                 return (
-                  <div key={item.href} className={`border-b ${isFloatingLight ? "border-[#C9E1F5]" : "border-white/10"}`}>
+                  <div key={item.href} className={`border-b ${mobileThemeIsLight ? "border-[#C9E1F5]" : "border-white/10"}`}>
                     <button
                       type="button"
                       onClick={handleMobileProductsToggle}
                       className={`flex w-full items-center justify-between gap-4 px-4 py-4 text-left text-sm font-semibold transition-colors ${
                         isActive(item.href) || isMobileProductsOpen
-                          ? isFloatingLight
+                          ? mobileThemeIsLight
                             ? "text-[#005BAC]"
                             : "text-blue-300"
-                          : isFloatingLight
+                          : mobileThemeIsLight
                           ? "text-slate-700"
                           : "text-white"
                       }`}
@@ -903,151 +904,212 @@ export default function Navbar() {
 
                     <div className={`grid transition-all duration-300 ${isMobileProductsOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}>
                       <div className="overflow-hidden">
-                        <div className={`border-t px-3 pb-4 pt-2 ${isFloatingLight ? "border-[#C9E1F5] bg-[#DFF0FC]/55" : "border-white/10 bg-white/[0.035]"}`}>
+                        <div className={`border-t px-3 pb-4 pt-2 ${mobileThemeIsLight ? "border-[#C9E1F5] bg-[#DFF0FC]/55" : "border-white/10 bg-white/[0.035]"}`}>
                           <Link
                             href="/products"
                             onClick={closeMobileMenu}
                             className={`mb-2 flex items-center justify-between px-4 py-3 text-xs font-bold uppercase tracking-[0.16em] ${
-                              isFloatingLight ? "text-[#005BAC]" : "text-blue-300"
+                              mobileThemeIsLight ? "text-[#005BAC]" : "text-blue-300"
                             }`}
                           >
                             View All Products
                             <ChevronRight className="h-4 w-4" />
                           </Link>
 
-                          {productCategories.map((category) => {
-                            const categoryIsOpen = mobileExpandedCategorySlug === category.slug;
+                          {/* Mobile Search Input */}
+                          <div className="relative mb-3 mt-2">
+                            <Search className={`absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 ${mobileThemeIsLight ? "text-slate-400" : "text-zinc-500"}`} />
+                            <input
+                              type="text"
+                              placeholder="Search products..."
+                              value={searchQuery}
+                              onChange={(e) => setSearchQuery(e.target.value)}
+                              className={`w-full rounded-lg border bg-transparent py-2 pl-9 pr-4 text-sm outline-none transition-colors ${
+                                mobileThemeIsLight
+                                  ? "border-[#C9E1F5] text-slate-800 placeholder:text-slate-400 focus:border-[#005BAC]"
+                                  : "border-white/15 text-white placeholder:text-zinc-400 focus:border-blue-300"
+                              }`}
+                            />
+                            {searchQuery && (
+                              <button
+                                type="button"
+                                onClick={() => setSearchQuery("")}
+                                className={`absolute right-3 top-1/2 -translate-y-1/2 ${mobileThemeIsLight ? "text-slate-400 hover:text-slate-600" : "text-zinc-400 hover:text-white"}`}
+                              >
+                                <X className="h-4 w-4" />
+                              </button>
+                            )}
+                          </div>
 
-                            return (
-                              <div key={category.slug} className={`border-t ${isFloatingLight ? "border-[#C9E1F5]" : "border-white/10"}`}>
-                                <div className="flex items-center">
+                          {/* Mobile Product List */}
+                          <div className="space-y-1">
+                            {searchQuery ? (
+                              // Search results
+                              filteredProducts.length > 0 ? (
+                                filteredProducts.slice(0, 12).map(({ product, categorySlug, subcategorySlug }) => (
                                   <Link
-                                    href={`/products/${category.slug}`}
+                                    key={product.slug}
+                                    href={`/products/${categorySlug}/${subcategorySlug}/${product.slug}`}
                                     onClick={closeMobileMenu}
-                                    className={`min-w-0 flex-1 px-4 py-3 text-sm font-semibold ${
-                                      isFloatingLight ? "text-slate-700" : "text-zinc-200"
+                                    className={`flex items-center justify-between gap-4 border-b px-4 py-3 text-xs font-medium last:border-b-0 ${
+                                      mobileThemeIsLight ? "border-[#E0ECF5] text-slate-600" : "border-white/[0.06] text-zinc-400"
                                     }`}
                                   >
                                     <span className="flex min-w-0 items-center gap-3">
                                       <span className={`h-8 w-8 shrink-0 overflow-hidden rounded-md border p-[1px] ${
-                                        isFloatingLight 
+                                        mobileThemeIsLight 
                                           ? "border-[#C9E1F5] bg-white shadow-[0_2px_8px_-2px_rgba(0,91,172,0.15)]" 
                                           : "border-slate-700 bg-[#0F172A] shadow-[0_0_0_1px_rgba(255,255,255,0.45),0_8px_18px_rgba(15,23,42,0.25)]"
                                       }`}>
-                                        <img src={category.image} alt="" className="h-full w-full object-cover" />
+                                        <img src={product.image} alt="" className="h-full w-full object-contain p-1" />
                                       </span>
-                                      <span className="truncate">{category.name}</span>
+                                      <span className="truncate">{product.name}</span>
                                     </span>
+                                    <ChevronRight className="h-3.5 w-3.5 shrink-0" />
                                   </Link>
+                                ))
+                              ) : (
+                                <p className={`px-4 py-3 text-xs ${mobileThemeIsLight ? "text-slate-500" : "text-zinc-500"}`}>
+                                  No products match your search.
+                                </p>
+                              )
+                            ) : (
+                              // Default: show categories + subcategories + products (original mobile hierarchy)
+                              productCategories.map((category) => {
+                                const categoryIsOpen = mobileExpandedCategorySlug === category.slug;
 
-                                  <button
-                                    type="button"
-                                    onClick={() => handleMobileCategoryToggle(category.slug)}
-                                    className={`flex h-11 w-11 shrink-0 items-center justify-center ${
-                                      isFloatingLight ? "text-[#005BAC]" : "text-blue-300"
-                                    }`}
-                                    aria-label={`Toggle ${category.name} series`}
-                                    aria-expanded={categoryIsOpen}
-                                  >
-                                    <ChevronDown
-                                      className={`h-4 w-4 transition-transform duration-300 ${categoryIsOpen ? "rotate-180" : ""}`}
-                                    />
-                                  </button>
-                                </div>
+                                return (
+                                  <div key={category.slug} className={`border-t ${mobileThemeIsLight ? "border-[#C9E1F5]" : "border-white/10"}`}>
+                                    <div className="flex items-center">
+                                      <Link
+                                        href={`/products/${category.slug}`}
+                                        onClick={closeMobileMenu}
+                                        className={`min-w-0 flex-1 px-4 py-3 text-sm font-semibold ${
+                                          mobileThemeIsLight ? "text-slate-700" : "text-zinc-200"
+                                        }`}
+                                      >
+                                        <span className="flex min-w-0 items-center gap-3">
+                                          <span className={`h-8 w-8 shrink-0 overflow-hidden rounded-md border p-[1px] ${
+                                            mobileThemeIsLight 
+                                              ? "border-[#C9E1F5] bg-white shadow-[0_2px_8px_-2px_rgba(0,91,172,0.15)]" 
+                                              : "border-slate-700 bg-[#0F172A] shadow-[0_0_0_1px_rgba(255,255,255,0.45),0_8px_18px_rgba(15,23,42,0.25)]"
+                                          }`}>
+                                            <img src={category.image} alt="" className="h-full w-full object-cover" />
+                                          </span>
+                                          <span className="truncate">{category.name}</span>
+                                        </span>
+                                      </Link>
 
-                                <div className={`grid transition-all duration-300 ${categoryIsOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}>
-                                  <div className="overflow-hidden">
-                                    <div className={`border-t pl-4 ${isFloatingLight ? "border-[#C9E1F5] bg-white/55" : "border-white/10 bg-black/15"}`}>
-                                      {category.subcategories.length > 0 ? (
-                                        category.subcategories.map((subcategory) => {
-                                          const subcategoryKey = `${category.slug}:${subcategory.slug}`;
-                                          const subcategoryIsOpen = mobileExpandedSubcategorySlug === subcategoryKey;
+                                      <button
+                                        type="button"
+                                        onClick={() => handleMobileCategoryToggle(category.slug)}
+                                        className={`flex h-11 w-11 shrink-0 items-center justify-center ${
+                                          mobileThemeIsLight ? "text-[#005BAC]" : "text-blue-300"
+                                        }`}
+                                        aria-label={`Toggle ${category.name} series`}
+                                        aria-expanded={categoryIsOpen}
+                                      >
+                                        <ChevronDown
+                                          className={`h-4 w-4 transition-transform duration-300 ${categoryIsOpen ? "rotate-180" : ""}`}
+                                        />
+                                      </button>
+                                    </div>
 
-                                          return (
-                                            <div key={subcategory.id} className={`border-b last:border-b-0 ${isFloatingLight ? "border-[#D6E8F5]" : "border-white/[0.07]"}`}>
-                                              <div className="flex items-center">
-                                                <Link
-                                                  href={`/products/${category.slug}/${subcategory.slug}`}
-                                                  onClick={closeMobileMenu}
-                                                  className={`min-w-0 flex-1 px-4 py-3 text-sm ${
-                                                    isFloatingLight ? "text-slate-600" : "text-zinc-300"
-                                                  }`}
-                                                >
-                                                  <span className="flex min-w-0 items-center gap-3">
-                                                    <span className={`h-8 w-8 shrink-0 overflow-hidden rounded-md border p-[1px] ${
-                                                      isFloatingLight 
-                                                        ? "border-[#C9E1F5] bg-white shadow-[0_2px_8px_-2px_rgba(0,91,172,0.15)]" 
-                                                        : "border-slate-700 bg-[#0F172A] shadow-[0_0_0_1px_rgba(255,255,255,0.45),0_8px_18px_rgba(15,23,42,0.25)]"
-                                                    }`}>
-                                                      <img src={subcategory.image} alt="" className="h-full w-full object-cover" />
-                                                    </span>
-                                                    <span className="truncate">{subcategory.name}</span>
-                                                  </span>
-                                                </Link>
+                                    <div className={`grid transition-all duration-300 ${categoryIsOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}>
+                                      <div className="overflow-hidden">
+                                        <div className={`border-t pl-4 ${mobileThemeIsLight ? "border-[#C9E1F5] bg-white/55" : "border-white/10 bg-black/15"}`}>
+                                          {category.subcategories.length > 0 ? (
+                                            category.subcategories.map((subcategory) => {
+                                              const subcategoryKey = `${category.slug}:${subcategory.slug}`;
+                                              const subcategoryIsOpen = mobileExpandedSubcategorySlug === subcategoryKey;
 
-                                                <button
-                                                  type="button"
-                                                  onClick={() => handleMobileSubcategoryToggle(subcategoryKey)}
-                                                  className={`flex h-11 w-11 shrink-0 items-center justify-center ${
-                                                    isFloatingLight ? "text-[#005BAC]" : "text-blue-300"
-                                                  }`}
-                                                  aria-label={`Toggle ${subcategory.name} products`}
-                                                  aria-expanded={subcategoryIsOpen}
-                                                >
-                                                  <ChevronDown
-                                                    className={`h-4 w-4 transition-transform duration-300 ${subcategoryIsOpen ? "rotate-180" : ""}`}
-                                                  />
-                                                </button>
-                                              </div>
+                                              return (
+                                                <div key={subcategory.id} className={`border-b last:border-b-0 ${mobileThemeIsLight ? "border-[#D6E8F5]" : "border-white/[0.07]"}`}>
+                                                  <div className="flex items-center">
+                                                    <Link
+                                                      href={`/products/${category.slug}/${subcategory.slug}`}
+                                                      onClick={closeMobileMenu}
+                                                      className={`min-w-0 flex-1 px-4 py-3 text-sm ${
+                                                        mobileThemeIsLight ? "text-slate-600" : "text-zinc-300"
+                                                      }`}
+                                                    >
+                                                      <span className="flex min-w-0 items-center gap-3">
+                                                        <span className={`h-8 w-8 shrink-0 overflow-hidden rounded-md border p-[1px] ${
+                                                          mobileThemeIsLight 
+                                                            ? "border-[#C9E1F5] bg-white shadow-[0_2px_8px_-2px_rgba(0,91,172,0.15)]" 
+                                                            : "border-slate-700 bg-[#0F172A] shadow-[0_0_0_1px_rgba(255,255,255,0.45),0_8px_18px_rgba(15,23,42,0.25)]"
+                                                        }`}>
+                                                          <img src={subcategory.image} alt="" className="h-full w-full object-cover" />
+                                                        </span>
+                                                        <span className="truncate">{subcategory.name}</span>
+                                                      </span>
+                                                    </Link>
 
-                                              <div className={`grid transition-all duration-300 ${subcategoryIsOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}>
-                                                <div className="overflow-hidden">
-                                                  <div className={`border-t py-2 pl-5 ${isFloatingLight ? "border-[#D6E8F5] bg-[#F5FAFE]" : "border-white/[0.07] bg-black/20"}`}>
-                                                    {subcategory.products.length > 0 ? (
-                                                      subcategory.products.map((product) => (
-                                                        <Link
-                                                          key={product.id}
-                                                          href={`/products/${category.slug}/${subcategory.slug}/${product.slug}`}
-                                                          onClick={closeMobileMenu}
-                                                          className={`flex items-center justify-between gap-4 border-b px-4 py-3 text-xs font-medium last:border-b-0 ${
-                                                            isFloatingLight ? "border-[#E0ECF5] text-slate-600" : "border-white/[0.06] text-zinc-400"
-                                                          }`}
-                                                        >
-                                                          <span className="flex min-w-0 items-center gap-3">
-                                                            <span className={`h-8 w-8 shrink-0 overflow-hidden rounded-md border p-[1px] ${
-                                                              isFloatingLight 
-                                                                ? "border-[#C9E1F5] bg-white shadow-[0_2px_8px_-2px_rgba(0,91,172,0.15)]" 
-                                                                : "border-slate-700 bg-[#0F172A] shadow-[0_0_0_1px_rgba(255,255,255,0.45),0_8px_18px_rgba(15,23,42,0.25)]"
-                                                            }`}>
-                                                              <img src={product.image} alt="" className="h-full w-full object-contain p-1" />
-                                                            </span>
-                                                            <span className="truncate">{product.name}</span>
-                                                          </span>
-                                                          <ChevronRight className="h-3.5 w-3.5 shrink-0" />
-                                                        </Link>
-                                                      ))
-                                                    ) : (
-                                                      <p className={`px-4 py-3 text-xs ${isFloatingLight ? "text-slate-500" : "text-zinc-500"}`}>
-                                                        No products available.
-                                                      </p>
-                                                    )}
+                                                    <button
+                                                      type="button"
+                                                      onClick={() => handleMobileSubcategoryToggle(subcategoryKey)}
+                                                      className={`flex h-11 w-11 shrink-0 items-center justify-center ${
+                                                        mobileThemeIsLight ? "text-[#005BAC]" : "text-blue-300"
+                                                      }`}
+                                                      aria-label={`Toggle ${subcategory.name} products`}
+                                                      aria-expanded={subcategoryIsOpen}
+                                                    >
+                                                      <ChevronDown
+                                                        className={`h-4 w-4 transition-transform duration-300 ${subcategoryIsOpen ? "rotate-180" : ""}`}
+                                                      />
+                                                    </button>
+                                                  </div>
+
+                                                  <div className={`grid transition-all duration-300 ${subcategoryIsOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}>
+                                                    <div className="overflow-hidden">
+                                                      <div className={`border-t py-2 pl-5 ${mobileThemeIsLight ? "border-[#D6E8F5] bg-[#F5FAFE]" : "border-white/[0.07] bg-black/20"}`}>
+                                                        {subcategory.products.length > 0 ? (
+                                                          subcategory.products.map((product) => (
+                                                            <Link
+                                                              key={product.id}
+                                                              href={`/products/${category.slug}/${subcategory.slug}/${product.slug}`}
+                                                              onClick={closeMobileMenu}
+                                                              className={`flex items-center justify-between gap-4 border-b px-4 py-3 text-xs font-medium last:border-b-0 ${
+                                                                mobileThemeIsLight ? "border-[#E0ECF5] text-slate-600" : "border-white/[0.06] text-zinc-400"
+                                                              }`}
+                                                            >
+                                                              <span className="flex min-w-0 items-center gap-3">
+                                                                <span className={`h-8 w-8 shrink-0 overflow-hidden rounded-md border p-[1px] ${
+                                                                  mobileThemeIsLight 
+                                                                    ? "border-[#C9E1F5] bg-white shadow-[0_2px_8px_-2px_rgba(0,91,172,0.15)]" 
+                                                                    : "border-slate-700 bg-[#0F172A] shadow-[0_0_0_1px_rgba(255,255,255,0.45),0_8px_18px_rgba(15,23,42,0.25)]"
+                                                                }`}>
+                                                                  <img src={product.image} alt="" className="h-full w-full object-contain p-1" />
+                                                                </span>
+                                                                <span className="truncate">{product.name}</span>
+                                                              </span>
+                                                              <ChevronRight className="h-3.5 w-3.5 shrink-0" />
+                                                            </Link>
+                                                          ))
+                                                        ) : (
+                                                          <p className={`px-4 py-3 text-xs ${mobileThemeIsLight ? "text-slate-500" : "text-zinc-500"}`}>
+                                                            No products available.
+                                                          </p>
+                                                        )}
+                                                      </div>
+                                                    </div>
                                                   </div>
                                                 </div>
-                                              </div>
-                                            </div>
-                                          );
-                                        })
-                                      ) : (
-                                        <p className={`px-4 py-4 text-xs ${isFloatingLight ? "text-slate-500" : "text-zinc-500"}`}>
-                                          No product series available.
-                                        </p>
-                                      )}
+                                              );
+                                            })
+                                          ) : (
+                                            <p className={`px-4 py-4 text-xs ${mobileThemeIsLight ? "text-slate-500" : "text-zinc-500"}`}>
+                                              No product series available.
+                                            </p>
+                                          )}
+                                        </div>
+                                      </div>
                                     </div>
                                   </div>
-                                </div>
-                              </div>
-                            );
-                          })}
+                                );
+                              })
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -1057,16 +1119,16 @@ export default function Navbar() {
 
               if (isSolutionsLink) {
                 return (
-                  <div key={item.href} className={`border-b ${isFloatingLight ? "border-[#C9E1F5]" : "border-white/10"}`}>
+                  <div key={item.href} className={`border-b ${mobileThemeIsLight ? "border-[#C9E1F5]" : "border-white/10"}`}>
                     <button
                       type="button"
                       onClick={handleMobileSolutionsToggle}
                       className={`flex w-full items-center justify-between gap-4 px-4 py-4 text-left text-sm font-semibold transition-colors ${
                         isActive(item.href) || isMobileSolutionsOpen
-                          ? isFloatingLight
+                          ? mobileThemeIsLight
                             ? "text-[#005BAC]"
                             : "text-blue-300"
-                          : isFloatingLight
+                          : mobileThemeIsLight
                           ? "text-slate-700"
                           : "text-white"
                       }`}
@@ -1080,12 +1142,12 @@ export default function Navbar() {
 
                     <div className={`grid transition-all duration-300 ${isMobileSolutionsOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}>
                       <div className="overflow-hidden">
-                        <div className={`border-t px-3 pb-4 pt-2 ${isFloatingLight ? "border-[#C9E1F5] bg-[#DFF0FC]/55" : "border-white/10 bg-white/[0.035]"}`}>
+                        <div className={`border-t px-3 pb-4 pt-2 ${mobileThemeIsLight ? "border-[#C9E1F5] bg-[#DFF0FC]/55" : "border-white/10 bg-white/[0.035]"}`}>
                           <Link
                             href="/solutions"
                             onClick={closeMobileMenu}
                             className={`mb-2 flex items-center justify-between px-4 py-3 text-xs font-bold uppercase tracking-[0.16em] ${
-                              isFloatingLight ? "text-[#005BAC]" : "text-blue-300"
+                              mobileThemeIsLight ? "text-[#005BAC]" : "text-blue-300"
                             }`}
                           >
                             View All Solutions
@@ -1098,11 +1160,11 @@ export default function Navbar() {
                               href={`/solutions/${solution.slug}`}
                               onClick={closeMobileMenu}
                               className={`flex items-center gap-3 border-t px-4 py-3 text-sm font-semibold ${
-                                isFloatingLight ? "border-[#C9E1F5] text-slate-700" : "border-white/10 text-zinc-200"
+                                mobileThemeIsLight ? "border-[#C9E1F5] text-slate-700" : "border-white/10 text-zinc-200"
                               }`}
                             >
                               <span className={`h-8 w-8 shrink-0 overflow-hidden rounded-md border p-[1px] ${
-                                isFloatingLight 
+                                mobileThemeIsLight 
                                   ? "border-[#C9E1F5] bg-white shadow-[0_2px_8px_-2px_rgba(0,91,172,0.15)]" 
                                   : "border-slate-700 bg-[#0F172A] shadow-[0_0_0_1px_rgba(255,255,255,0.45),0_8px_18px_rgba(15,23,42,0.25)]"
                               }`}>
@@ -1125,10 +1187,10 @@ export default function Navbar() {
                   onClick={closeMobileMenu}
                   className={`block border-b px-4 py-4 text-sm font-semibold transition-colors ${
                     isActive(item.href)
-                      ? isFloatingLight
+                      ? mobileThemeIsLight
                         ? "border-[#C9E1F5] text-[#005BAC]"
                         : "border-white/10 text-blue-300"
-                      : isFloatingLight
+                      : mobileThemeIsLight
                       ? "border-[#C9E1F5] text-slate-700"
                       : "border-white/10 text-white"
                   }`}
@@ -1143,7 +1205,7 @@ export default function Navbar() {
                 href="/contact"
                 onClick={closeMobileMenu}
                 className={`block w-full border px-4 py-3 text-center text-sm font-semibold ${
-                  isFloatingLight
+                  mobileThemeIsLight
                     ? "border-[#005BAC] bg-[#005BAC] text-white"
                     : "border-white/30 bg-white/10 text-white backdrop-blur-md"
                 }`}

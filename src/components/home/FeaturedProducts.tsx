@@ -57,37 +57,35 @@ export default function FeaturedProducts() {
               <FadeIn key={product.id} delay={index * 0.06}>
                 <Link
                   href={`/products/${category.slug}/${subcategory.slug}/${product.slug}`}
-                  className="group relative flex aspect-[3/4] cursor-pointer flex-col justify-end overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-zinc-200/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:ring-zinc-300"
+                  className="group relative flex aspect-[3/4] cursor-pointer flex-col justify-end overflow-hidden rounded-xl shadow-sm ring-1 ring-zinc-200/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:ring-zinc-300"
                 >
-                  {/* Image */}
+                  {/* Image - clear and full */}
                   <img
                     src={product.image}
                     alt={product.name}
                     className="absolute inset-0 h-full w-full object-contain p-4 transition-transform duration-[900ms] ease-[cubic-bezier(0.33,1,0.68,1)] group-hover:scale-105"
                   />
 
-                  {/* Light gradient overlay for text readability */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-white via-white/60 to-transparent transition-opacity duration-500 group-hover:opacity-90" />
+                  {/* Very subtle bottom gradient for text readability (almost invisible) */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/10 via-zinc-950/5 to-transparent" />
 
                   {/* Hover accent line */}
                   <div className="absolute bottom-0 left-0 top-0 z-20 w-0.5 origin-center scale-y-0 bg-blue-600 transition-transform duration-300 group-hover:scale-y-100" />
 
-                
-
-                  {/* Content */}
+                  {/* Content – text now black */}
                   <div className="relative z-10 translate-y-[58px] p-4 transition-transform duration-500 ease-[cubic-bezier(0.33,1,0.68,1)] group-hover:translate-y-0">
                     <span className="text-[8px] font-bold uppercase tracking-[0.18em] text-blue-600">
                       {category.name}
                     </span>
 
-                    <h3 className="mt-2 line-clamp-2 text-[13px] font-semibold leading-tight tracking-tight text-zinc-900">
+                    <h3 className="mt-2 line-clamp-2 text-[13px] font-semibold leading-tight tracking-tight text-black">
                       {product.name}
                     </h3>
 
                     <div className="mb-3 mt-3 h-px w-6 bg-blue-500 transition-all duration-500 group-hover:w-14" />
 
                     <div className="opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-                      <p className="line-clamp-2 text-[10px] leading-5 text-zinc-600">
+                      <p className="line-clamp-2 text-[10px] leading-5 text-black/70">
                         {subcategory.name}
                       </p>
 

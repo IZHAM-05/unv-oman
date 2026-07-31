@@ -18,36 +18,38 @@ export default function ProductCard({
   return (
     <Link
       href={`/products/${categorySlug}/${subcategorySlug}/${product.slug}`}
-      className="group relative flex min-h-[300px] cursor-pointer flex-col justify-end overflow-hidden"
+      className="group relative flex min-h-[300px] cursor-pointer flex-col justify-end overflow-hidden rounded-xl shadow-sm ring-1 ring-zinc-200/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:ring-zinc-300"
     >
+      {/* Image - clear and full */}
       <img
         src={product.image}
         alt={product.name}
         className="absolute inset-0 h-full w-full object-contain p-4 transition-transform duration-[900ms] ease-[cubic-bezier(0.33,1,0.68,1)] group-hover:scale-110"
       />
 
-      <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/45 to-transparent transition-opacity duration-500 group-hover:opacity-95" />
+      {/* Very subtle bottom gradient for text readability */}
+      <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/10 via-zinc-950/5 to-transparent" />
 
-      <div className="absolute inset-0 bg-blue-600/0 transition-colors duration-700 group-hover:bg-blue-600/10" />
+      {/* Decorative left accent line */}
+      <div className="absolute bottom-0 left-0 top-0 z-20 w-0.5 origin-center scale-y-0 bg-blue-600 transition-transform duration-300 group-hover:scale-y-100" />
 
-      <div className="absolute right-4 top-4 z-10 text-[40px] font-black leading-none tracking-tighter text-white/[0.06] transition-colors duration-500 group-hover:text-white/10">
-        {productCardContent.backgroundLabel}
-      </div>
+   
 
+      {/* Content - text now black */}
       <div className="relative z-10 translate-y-[85px] p-5 transition-transform duration-500 ease-[cubic-bezier(0.33,1,0.68,1)] group-hover:translate-y-0">
-        <h3 className="text-xl font-bold tracking-tight text-white">
+        <h3 className="text-xl font-bold tracking-tight text-black">
           {product.name}
         </h3>
 
         <div className="mb-3 mt-3 h-0.5 w-10 bg-blue-500 transition-all duration-500 ease-[cubic-bezier(0.33,1,0.68,1)] group-hover:w-20" />
 
         <div className="opacity-0 transition-all duration-500 ease-[cubic-bezier(0.33,1,0.68,1)] group-hover:opacity-100">
-          <p className="line-clamp-2 max-w-md text-xs leading-6 text-white/70">
+          <p className="line-clamp-2 max-w-md text-xs leading-6 text-black/70">
             {product.description}
           </p>
 
           <div className="mt-4 flex items-center justify-between gap-4">
-            <div className="flex items-center gap-2 text-xs font-semibold tracking-wide text-white">
+            <div className="flex items-center gap-2 text-xs font-semibold tracking-wide text-blue-600">
               <span>{productCardContent.actionLabel}</span>
 
               <svg
@@ -66,7 +68,7 @@ export default function ProductCard({
               </svg>
             </div>
 
-            <span className="border border-white/15 bg-white/10 px-3 py-1 text-[9px] font-bold uppercase tracking-[0.16em] text-white/70 backdrop-blur-sm">
+            <span className="border border-zinc-200/50 bg-white/80 px-3 py-1 text-[9px] font-bold uppercase tracking-[0.16em] text-zinc-600 backdrop-blur-sm ring-1 ring-zinc-200/50">
               {subcategorySlug.replace(/-/g, " ")}
             </span>
           </div>
